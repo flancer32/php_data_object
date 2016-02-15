@@ -1,0 +1,21 @@
+{
+  "name": "flancer32/php_data_object",
+  "description": "Universal Data Container (based on Varien_Object).",
+  "type": "library",
+  "license": "MIT",
+  "homepage": "https://github.com/flancer32/php_data_object",
+  "authors": [
+    {
+      "name": "Alex Gusev",
+      "email": "alex@flancer64.com"
+    }
+  ],
+  "require-dev": {
+    "phpunit/phpunit": "~4|~5"
+  },
+  "autoload": {
+    "psr-4": {
+      "Flancer32\\Lib\\": "src/"
+    }
+  }
+}
