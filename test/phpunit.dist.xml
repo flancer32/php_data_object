@@ -11,4 +11,11 @@
     <testsuite name="Unit Tests for DataObject">
         <directory suffix="_Test.php">.</directory>
     </testsuite>
+    <filter>
+        <whitelist
+                processUncoveredFilesFromWhitelist="true"
+                addUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">../src</directory>
+        </whitelist>
+    </filter>
 </phpunit>
