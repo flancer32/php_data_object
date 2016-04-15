@@ -70,7 +70,7 @@ class DataObject
                 throw new \Exception($msg);
             }
         }
-        $varName = substr($methodName, $strlen);
+        $varName = lcfirst(substr($methodName, $strlen));
         switch ($methodPrefix) {
             case self::_METHOD_GET:
                 $result = $this->getData($varName);

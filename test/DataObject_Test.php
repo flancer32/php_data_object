@@ -33,10 +33,6 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         /** === Test Data === */
         $KEY = 'key';
         /** === Mocks === */
-        $obj = new DataObject(['key' => 'value']);
-        $obj->getData('key'); // 'value'
-
-
         /** === Test itself === */
         $obj = new DataObject();
         $obj->setData($KEY, 10);
