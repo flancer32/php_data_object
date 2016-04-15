@@ -9,12 +9,19 @@ namespace Flancer32\Lib;
  */
 class DataObject
 {
-    /* Magic methods prefixes */
-    const METHOD_GET = 'get';
-    const METHOD_SET = 'set';
-    const METHOD_UNSET = 'unset';
     /** Separator for keys path elements */
     const PS = '/';
+    
+    /**#@+
+     * Magic methods prefixes.
+     *
+     * @var string
+     */
+    const _METHOD_GET = 'get';
+    const _METHOD_SET = 'set';
+    const _METHOD_UNSET = 'unset';
+    /**#@-*/
+
     /** @var null|array Container for data */
     private $_data = null;
 
@@ -53,30 +60,131 @@ class DataObject
         $strlen = 3;
         $methodPrefix = substr($methodName, 0, $strlen);
         if (
-            ($methodPrefix != self::METHOD_GET) &&
-            ($methodPrefix != self::METHOD_SET)
+            ($methodPrefix != self::_METHOD_GET) &&
+            ($methodPrefix != self::_METHOD_SET)
         ) {
             $strlen = 5;
             $methodPrefix = substr($methodName, 0, $strlen);
-            if ($methodPrefix != self::METHOD_UNSET) {
+            if ($methodPrefix != self::_METHOD_UNSET) {
                 $msg = 'Invalid method ' . get_class($this) . "::$methodName(" . print_r($arguments, 1) . ')';
                 throw new \Exception($msg);
             }
         }
         $varName = substr($methodName, $strlen);
         switch ($methodPrefix) {
-            case self::METHOD_GET:
+            case self::_METHOD_GET:
                 $result = $this->getData($varName);
                 break;
-            case self::METHOD_SET:
+            case self::_METHOD_SET:
                 $varValue = isset($arguments[0]) ? $arguments[0] : null;
                 $this->setData($varName, $varValue);
                 break;
-            case self::METHOD_UNSET:
+            case self::_METHOD_UNSET:
                 $this->unsetData($varName);
                 break;
         }
         return $result;
+    }
+
+    /**
+     * @param $path
+     *
+     * @return array|null
+     */
+    private function _getByPath($path)
+    {
+        $result = $this->_data;
+        $keys = explode(self::PS, $path);
+        $depth = count($keys);
+        $level = 0;
+        foreach ($keys as $key) {
+            $level++;
+            /* omit empty nodes (root node) */
+            if ($key == '') {
+                continue;
+            }
+            if (isset($result[$key])) {
+                if (
+                    ($result[$key] instanceof DataObject)
+                    && ($level < $depth)
+                ) {
+                    /* convert nested DataObjects to array if current path element is not the last */
+                    $result = $result[$key]->getData();
+                } else {
+                    $result = $result[$key];
+                }
+            } else {
+                $result = null;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * @param $path
+     * @param $data
+     */
+    private function _setByPath($path, $data)
+    {
+        /* init $data if is not initialized yet */
+        if (is_null($this->_data)) {
+            $this->_data = [];
+        }
+        $current = &$this->_data;
+        $keys = explode(self::PS, $path);
+        foreach ($keys as $key) {
+            /* omit empty nodes (root node) */
+            if ($key == '') {
+                continue;
+            }
+            if (isset($current[$key])) {
+                /* just go through the $data structure */
+                $current = &$current[$key];
+            } else {
+                if (is_array($current)) {
+                    /* we need to create new node on the path */
+                    $current[$key] = [];
+                    $current = &$current[$key];
+                } else {
+                    $current = [$key => []];
+                    $current = &$current[$key];
+                }
+            }
+        }
+        /* use internal container if $data is instance of DataObject */
+//        if ($data instanceof DataObject) {
+//            $current = $data->getData();
+//        } else {
+        $current = $data;
+//        }
+    }
+
+    private function _unsetByPath($path)
+    {
+        if (!is_null($this->_data)) {
+            $current = &$this->_data;
+            $keys = explode(self::PS, $path);
+            $count = count($keys);
+            foreach ($keys as $key) {
+                $count--;
+                /* omit empty nodes (root node) */
+                if ($key == '') {
+                    continue;
+                }
+                if (isset($current[$key])) {
+                    if ($count <= 0) {
+                        /* this is the end of path, unset element in array */
+                        unset($current[$key]);
+                    } else {
+                        /* just go through the $data structure */
+                        $current = &$current[$key];
+                    }
+                } else {
+                    /* this is unexisting path, just interrupt loop */
+                    break;
+                }
+            }
+        }
     }
 
     /**
@@ -121,54 +229,18 @@ class DataObject
     {
         $num = func_num_args();
         if ($num == 1) {
-            /* $arg1 is value itself, reset data */
-            if ($arg1 instanceof DataObject) {
-                /* use internal container of the $data */
-                $this->_data = $arg1->getData();
-            } else {
-                /* use $data itself */
-                $this->_data = $arg1;
-            }
+            $this->_data = $arg1;
         } elseif ($num == 2) {
             /* there are 2 args - key & value */
             $key = (string)$arg1;
             if (strpos($key, self::PS) === false) {
                 /* set data value by key */
-                if ($arg2 instanceof DataObject) {
-                    /* use internal container of the $data */
-                    $this->_data[$key] = $arg2->getData();
-                } else {
-                    /* use $data itself */
-                    $this->_data[$key] = $arg2;
-                }
+                $this->_data[$key] = $arg2;
             } else {
                 /* set data value by path */
                 $this->_setByPath($key, $arg2);
             }
         }
-    }
-
-    /**
-     * @param $path
-     *
-     * @return array|null
-     */
-    private function _getByPath($path)
-    {
-        $result = $this->_data;
-        $keys = explode(self::PS, $path);
-        foreach ($keys as $key) {
-            /* omit empty nodes (root node) */
-            if ($key == '') {
-                continue;
-            }
-            if (isset($result[$key])) {
-                $result = $result[$key];
-            } else {
-                $result = null;
-            }
-        }
-        return $result;
     }
 
     public function unsetData($path = null)
@@ -188,73 +260,6 @@ class DataObject
         ) {
             /* unset element by path */
             $this->_unsetByPath($path);
-        }
-    }
-
-    private function _unsetByPath($path)
-    {
-        if (!is_null($this->_data)) {
-            $current = &$this->_data;
-            $keys = explode(self::PS, $path);
-            $count = count($keys);
-            foreach ($keys as $key) {
-                $count--;
-                /* omit empty nodes (root node) */
-                if ($key == '') {
-                    continue;
-                }
-                if (isset($current[$key])) {
-                    if ($count <= 0) {
-                        /* this is the end of path, unset element in array */
-                        unset($current[$key]);
-                    } else {
-                        /* just go through the $data structure */
-                        $current = &$current[$key];
-                    }
-                } else {
-                    /* this is unexisting path, just interrupt loop */
-                    break;
-                }
-            }
-        }
-    }
-
-    /**
-     * @param $path
-     * @param $data
-     */
-    private function _setByPath($path, $data)
-    {
-        /* init $data if is not initialized yet */
-        if (is_null($this->_data)) {
-            $this->_data = [];
-        }
-        $current = &$this->_data;
-        $keys = explode(self::PS, $path);
-        foreach ($keys as $key) {
-            /* omit empty nodes (root node) */
-            if ($key == '') {
-                continue;
-            }
-            if (isset($current[$key])) {
-                /* just go through the $data structure */
-                $current = &$current[$key];
-            } else {
-                if (is_array($current)) {
-                    /* we need to create new node on the path */
-                    $current[$key] = [];
-                    $current = &$current[$key];
-                } else {
-                    $current = [$key => []];
-                    $current = &$current[$key];
-                }
-            }
-        }
-        /* use internal container if $data is instance of DataObject */
-        if ($data instanceof DataObject) {
-            $current = $data->getData();
-        } else {
-            $current = $data;
         }
     }
 }
