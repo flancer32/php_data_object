@@ -6,16 +6,6 @@ namespace Flancer32\Lib;
 
 class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
 {
-    public function test_construct()
-    {
-        /** === Test Data === */
-        $VAL = 'value';
-        /** === Mocks === */
-        /** === Test itself === */
-        $obj = new DataObject($VAL, null);
-        $this->assertEquals($VAL, $obj->getData());
-    }
-
     /**
      * @expectedException \Exception
      */
@@ -28,21 +18,14 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $obj->callUnknownMethod();
     }
 
-    public function test_setData_wo_keys()
+    public function test_construct()
     {
         /** === Test Data === */
+        $VAL = 'value';
         /** === Mocks === */
         /** === Test itself === */
-        $obj = new DataObject();
-        $this->assertEquals(null, $obj->getData());
-        $obj->setData(10);
-        $this->assertEquals(10, $obj->getData());
-        $obj->setData('string');
-        $this->assertEquals('string', $obj->getData());
-        $obj->setData(['array']);
-        $this->assertEquals(['array'], $obj->getData());
-        $obj->setData(new DataObject('key', 'value'));
-        $this->assertEquals('value', $obj->getData('key'));
+        $obj = new DataObject($VAL, null);
+        $this->assertEquals($VAL, $obj->getData());
     }
 
     public function test_setData_key()
@@ -50,6 +33,10 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         /** === Test Data === */
         $KEY = 'key';
         /** === Mocks === */
+        $obj = new DataObject(['key' => 'value']);
+        $obj->getData('key'); // 'value'
+
+
         /** === Test itself === */
         $obj = new DataObject();
         $obj->setData($KEY, 10);
@@ -60,7 +47,8 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(['array'], $obj->getData($KEY));
         /* use DataObject as data */
         $obj->setData($KEY, new DataObject('value'));
-        $this->assertEquals('value', $obj->getData($KEY));
+        $this->assertInstanceOf(DataObject::class, $obj->getData($KEY));
+        $this->assertEquals('value', $obj->getData($KEY)->getData());
     }
 
     public function test_setData_path()
@@ -84,11 +72,33 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($VAL_INT, $obj->getData('path/to/node'));
         $this->assertEquals($VAL_STR1, $obj->getData('/key'));
         $this->assertEquals(null, $obj->getData('/path/is/not/exist'));
+    }
+
+    public function test_setData_path_nested()
+    {
+        $obj = new DataObject();
         /* use DataObject as data */
         $obj->setData('path/to/node', new DataObject('attr', 'value'));
         $this->assertEquals('value', $obj->getData('path/to/node/attr'));
+        $this->assertInstanceOf(DataObject::class, $obj->getData('path/to/node'));
     }
 
+    public function test_setData_wo_keys()
+    {
+        /** === Test Data === */
+        /** === Mocks === */
+        /** === Test itself === */
+        $obj = new DataObject();
+        $this->assertEquals(null, $obj->getData());
+        $obj->setData(10);
+        $this->assertEquals(10, $obj->getData());
+        $obj->setData('string');
+        $this->assertEquals('string', $obj->getData());
+        $obj->setData(['array']);
+        $this->assertEquals(['array'], $obj->getData());
+        $obj->setData(new DataObject('key', 'value'));
+        $this->assertEquals('value', $obj->getData()->getData('key'));
+    }
 
     public function test_unsetData()
     {

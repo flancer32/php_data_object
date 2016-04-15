@@ -11,7 +11,7 @@ class DataObject
 {
     /** Separator for keys path elements */
     const PS = '/';
-    
+
     /**#@+
      * Magic methods prefixes.
      *
@@ -180,7 +180,7 @@ class DataObject
                         $current = &$current[$key];
                     }
                 } else {
-                    /* this is unexisting path, just interrupt loop */
+                    /* this is un-existing path, just interrupt loop */
                     break;
                 }
             }
@@ -193,7 +193,7 @@ class DataObject
      *
      * @param string $path
      *
-     * @return array|null
+     * @return mixed
      */
     public function getData($path = null)
     {
