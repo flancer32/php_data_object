@@ -229,7 +229,8 @@ class DataObject
     {
         $num = func_num_args();
         if ($num == 1) {
-            $this->_data = $arg1;
+            /* transfer associative array data only if first arg is DataObject */
+            $this->_data = ($arg1 instanceof DataObject) ? $arg1->getData() : $arg1;
         } elseif ($num == 2) {
             /* there are 2 args - key & value */
             $key = (string)$arg1;
