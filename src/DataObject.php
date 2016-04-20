@@ -60,26 +60,26 @@ class DataObject
         $strlen = 3;
         $methodPrefix = substr($methodName, 0, $strlen);
         if (
-            ($methodPrefix != self::_METHOD_GET) &&
-            ($methodPrefix != self::_METHOD_SET)
+            ($methodPrefix != static::_METHOD_GET) &&
+            ($methodPrefix != static::_METHOD_SET)
         ) {
             $strlen = 5;
             $methodPrefix = substr($methodName, 0, $strlen);
-            if ($methodPrefix != self::_METHOD_UNSET) {
+            if ($methodPrefix != static::_METHOD_UNSET) {
                 $msg = 'Invalid method ' . get_class($this) . "::$methodName(" . print_r($arguments, 1) . ')';
                 throw new \Exception($msg);
             }
         }
         $varName = lcfirst(substr($methodName, $strlen));
         switch ($methodPrefix) {
-            case self::_METHOD_GET:
+            case static::_METHOD_GET:
                 $result = $this->getData($varName);
                 break;
-            case self::_METHOD_SET:
+            case static::_METHOD_SET:
                 $varValue = isset($arguments[0]) ? $arguments[0] : null;
                 $this->setData($varName, $varValue);
                 break;
-            case self::_METHOD_UNSET:
+            case static::_METHOD_UNSET:
                 $this->unsetData($varName);
                 break;
         }
@@ -94,7 +94,8 @@ class DataObject
     private function _getByPath($path)
     {
         $result = $this->_data;
-        $keys = explode(self::PS, $path);
+        $keys = explode(static::PS, $path);
+        $keys = array_map('lcfirst', $keys);
         $depth = count($keys);
         $level = 0;
         foreach ($keys as $key) {
@@ -131,7 +132,8 @@ class DataObject
             $this->_data = [];
         }
         $current = &$this->_data;
-        $keys = explode(self::PS, $path);
+        $keys = explode(static::PS, $path);
+        $keys = array_map('lcfirst', $keys);
         foreach ($keys as $key) {
             /* omit empty nodes (root node) */
             if ($key == '') {
@@ -151,19 +153,14 @@ class DataObject
                 }
             }
         }
-        /* use internal container if $data is instance of DataObject */
-//        if ($data instanceof DataObject) {
-//            $current = $data->getData();
-//        } else {
         $current = $data;
-//        }
     }
 
     private function _unsetByPath($path)
     {
         if (!is_null($this->_data)) {
             $current = &$this->_data;
-            $keys = explode(self::PS, $path);
+            $keys = explode(static::PS, $path);
             $count = count($keys);
             foreach ($keys as $key) {
                 $count--;
@@ -188,7 +185,7 @@ class DataObject
     }
 
     /**
-     * Universal method to get data from container by path ('/Object/InnerObject/Attribute'). Internal data container
+     * Universal method to get data from container by path ('/object/innerObject/attribute'). Internal data container
      * ($this->_data) will be returned if $path is null.
      *
      * @param string $path
@@ -199,9 +196,10 @@ class DataObject
     {
         if (!is_null($path) && is_array($this->_data)) {
             /* we need to find item by $path in $data array to return */
-            if (strpos($path, self::PS) === false) {
+            if (strpos($path, static::PS) === false) {
                 /* there is no path separator in the $path, use $path itself to get $data item */
-                $result = isset($this->_data[$path]) ? $this->_data[$path] : null;
+                $key = lcfirst($path);
+                $result = isset($this->_data[$key]) ? $this->_data[$key] : null;
             } else {
                 /* we need to go down to $data array structure */
                 $result = $this->_getByPath($path);
@@ -233,8 +231,8 @@ class DataObject
             $this->_data = ($arg1 instanceof DataObject) ? $arg1->getData() : $arg1;
         } elseif ($num == 2) {
             /* there are 2 args - key & value */
-            $key = (string)$arg1;
-            if (strpos($key, self::PS) === false) {
+            $key = lcfirst($arg1);
+            if (strpos($key, static::PS) === false) {
                 /* set data value by key */
                 $this->_data[$key] = $arg2;
             } else {
@@ -257,7 +255,7 @@ class DataObject
             unset($this->_data[$path]);
         } elseif (
             is_array($this->_data) &&
-            (strpos($path, self::PS) !== false)
+            (strpos($path, static::PS) !== false)
         ) {
             /* unset element by path */
             $this->_unsetByPath($path);

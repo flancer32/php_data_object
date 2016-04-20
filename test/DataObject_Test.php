@@ -93,7 +93,7 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $obj->setData(['array']);
         $this->assertEquals(['array'], $obj->getData());
         $obj->setData(new DataObject('key', 'value'));
-        $this->assertEquals('value', $obj->getData()->getData('key'));
+        $this->assertEquals('value', $obj->getData('key'));
     }
 
     public function test_unsetData()
