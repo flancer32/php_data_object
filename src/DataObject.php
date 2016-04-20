@@ -70,6 +70,7 @@ class DataObject
                 throw new \Exception($msg);
             }
         }
+        /* convert '[get|set|unset]AttributeName' to 'attributeName' form */
         $varName = lcfirst(substr($methodName, $strlen));
         switch ($methodPrefix) {
             case static::_METHOD_GET:
@@ -95,7 +96,6 @@ class DataObject
     {
         $result = $this->_data;
         $keys = explode(static::PS, $path);
-        $keys = array_map('lcfirst', $keys);
         $depth = count($keys);
         $level = 0;
         foreach ($keys as $key) {
@@ -133,7 +133,6 @@ class DataObject
         }
         $current = &$this->_data;
         $keys = explode(static::PS, $path);
-        $keys = array_map('lcfirst', $keys);
         foreach ($keys as $key) {
             /* omit empty nodes (root node) */
             if ($key == '') {
@@ -161,7 +160,6 @@ class DataObject
         if (!is_null($this->_data)) {
             $current = &$this->_data;
             $keys = explode(static::PS, $path);
-            $keys = array_map('lcfirst', $keys);
             $count = count($keys);
             foreach ($keys as $key) {
                 $count--;
@@ -199,7 +197,7 @@ class DataObject
             /* we need to find item by $path in $data array to return */
             if (strpos($path, static::PS) === false) {
                 /* there is no path separator in the $path, use $path itself to get $data item */
-                $key = lcfirst($path);
+                $key = trim($path);
                 $result = isset($this->_data[$key]) ? $this->_data[$key] : null;
             } else {
                 /* we need to go down to $data array structure */
@@ -232,7 +230,7 @@ class DataObject
             $this->_data = ($arg1 instanceof DataObject) ? $arg1->getData() : $arg1;
         } elseif ($num == 2) {
             /* there are 2 args - key & value */
-            $key = lcfirst($arg1);
+            $key = trim($arg1);
             if (strpos($key, static::PS) === false) {
                 /* set data value by key */
                 $this->_data[$key] = $arg2;
