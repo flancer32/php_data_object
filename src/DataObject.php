@@ -161,6 +161,7 @@ class DataObject
         if (!is_null($this->_data)) {
             $current = &$this->_data;
             $keys = explode(static::PS, $path);
+            $keys = array_map('lcfirst', $keys);
             $count = count($keys);
             foreach ($keys as $key) {
                 $count--;
