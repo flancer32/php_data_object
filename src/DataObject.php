@@ -188,10 +188,11 @@ class DataObject
      * ($this->_data) will be returned if $path is null.
      *
      * @param string $path
+     * @param bool $underscored
      *
      * @return mixed
      */
-    public function getData($path = null)
+    public function getData($path = null, $underscored = false)
     {
         if (!is_null($path) && is_array($this->_data)) {
             /* we need to find item by $path in $data array to return */
@@ -206,7 +207,49 @@ class DataObject
         } else {
             $result = $this->_data;
         }
+        if ($underscored) {
+            $result = $this->_convertToUnderScored($result);
+        }
         return $result;
+    }
+
+    /**
+     * Recursively convert DataObject to associative array with 'undescored' keys (CamelCase => under_scored).
+     * @param $data
+     * @return array
+     */
+    protected function _convertToUnderScored($data)
+    {
+        $result = [];
+        foreach ($data as $key => $item) {
+            $underscored = $this->_fromCamelCase($key);
+            if (is_array($item)) {
+                $result[$underscored] = $this->_convertToUnderScored($item);
+            } elseif ($item instanceof DataObject) {
+                $result[$underscored] = $this->_convertToUnderScored($item->getData());
+            } else {
+                $result[$underscored] = $item;
+            }
+        }
+        return $result;
+    }
+
+    /**
+     * Convert CamelCase string to underscored string.
+     *
+     * Special thanks for 'cletus' (http://stackoverflow.com/questions/1993721/how-to-convert-camelcase-to-camel-case)
+     *
+     * @param string $input
+     * @return string
+     */
+    protected function _fromCamelCase($input)
+    {
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', $input, $matches);
+        $ret = $matches[0];
+        foreach ($ret as &$match) {
+            $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
+        }
+        return implode('_', $ret);
     }
 
     /**
