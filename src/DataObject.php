@@ -8,6 +8,7 @@ namespace Flancer32\Lib;
  * Universal Data Container.
  */
 class DataObject
+    implements \IteratorAggregate
 {
     /** Separator for keys path elements */
     const PS = '/';
@@ -215,6 +216,9 @@ class DataObject
 
     /**
      * Recursively convert DataObject to associative array with 'undescored' keys (CamelCase => under_scored).
+     * 
+     * TODO: all converters should be external
+     *
      * @param $data
      * @return array
      */
@@ -222,13 +226,19 @@ class DataObject
     {
         $result = [];
         foreach ($data as $key => $item) {
-            $underscored = $this->_fromCamelCase($key);
+            $underKey = $this->_fromCamelCase($key);
             if (is_array($item)) {
-                $result[$underscored] = $this->_convertToUnderScored($item);
+                foreach ($item as $subKey => $subItem) {
+                    if (!is_int($subKey)) {
+                        $subKey = $this->_fromCamelCase($subKey);
+                    }
+                    $subData = $this->_convertToUnderScored($subItem);
+                    $result[$underKey][$subKey] = $subData;
+                }
             } elseif ($item instanceof DataObject) {
-                $result[$underscored] = $this->_convertToUnderScored($item->getData());
+                $result[$underKey] = $this->_convertToUnderScored($item->getData());
             } else {
-                $result[$underscored] = $item;
+                $result[$underKey] = $item;
             }
         }
         return $result;
@@ -302,5 +312,10 @@ class DataObject
             /* unset element by path */
             $this->_unsetByPath($path);
         }
+    }
+
+    public function getIterator()
+    {
+        return new \ArrayIterator($this->_data);
     }
 }
