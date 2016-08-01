@@ -216,7 +216,7 @@ class DataObject
 
     /**
      * Recursively convert DataObject to associative array with 'undescored' keys (CamelCase => under_scored).
-     * 
+     *
      * TODO: all converters should be external
      *
      * @param $data
@@ -270,10 +270,10 @@ class DataObject
      * $obj->set('key_name', $anyDataToSet);
      * $obj->set('/path/to/node', $anyDataToSet);
      *
-     * @param      $arg1
+     * @param mixed $arg1
      * @param null $arg2
      *
-     * @return $this
+     * @return null
      */
     public function setData($arg1, $arg2 = null)
     {
@@ -314,6 +314,9 @@ class DataObject
         }
     }
 
+    /**
+     * @return \ArrayIterator
+     */
     public function getIterator()
     {
         return new \ArrayIterator($this->_data);
