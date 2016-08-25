@@ -215,7 +215,7 @@ class DataObject
     }
 
     /**
-     * Recursively convert DataObject to associative array with 'undescored' keys (CamelCase => under_scored).
+     * Recursively convert DataObject to associative array with 'underscored' keys (CamelCase => under_scored).
      *
      * TODO: all converters should be external
      *
@@ -292,6 +292,7 @@ class DataObject
                 $this->_setByPath($key, $arg2);
             }
         }
+        return;
     }
 
     public function unsetData($path = null)
