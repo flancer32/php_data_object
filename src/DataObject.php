@@ -295,6 +295,10 @@ class DataObject
         return;
     }
 
+    /**
+     * @param null $path
+     * @return null
+     */
     public function unsetData($path = null)
     {
         if (is_null($path)) {
