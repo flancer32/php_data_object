@@ -27,12 +27,12 @@ Get JSON decoded data by path:
     $data = json_decode($json, true);
     $obj = new DataObject($data);
     /* get data by path */
-    $orderId = $obj->getData('order/id'); // 21
-    $itemId = $obj->getData('order/items/1/id'); // 56
+    $orderId = $obj->_get('order/id'); // 21
+    $itemId = $obj->_get('order/items/1/id'); // 56
     /* get first level data by key */
     $order = $obj->getOrder();
     /* get arrays by path */
-    foreach ($obj->getData('/order/items') as $item) {
+    foreach ($obj->_get('/order/items') as $item) {
         $id = $item['id']; // 32, 56
         /* convert array to data object */
         $itemObj = new DataObject($item);

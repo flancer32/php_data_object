@@ -21,33 +21,37 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
     public function test_construct()
     {
         /** === Test Data === */
-        $VAL = 'value';
-        /** === Mocks === */
+        $KEY = 'key';
+        $VALUE = 'value';
         /** === Test itself === */
-        $obj = new DataObject($VAL, null);
-        $this->assertEquals($VAL, $obj->getData());
+        $obj = new DataObject();
+        $this->assertEquals(null, $obj->_get());
+        $obj = new DataObject($VALUE);
+        $this->assertEquals($VALUE, $obj->_get());
+        $obj = new DataObject($KEY, $VALUE);
+        $this->assertEquals($VALUE, $obj->_get($KEY));
     }
 
-    public function test_setData_key()
+    public function test__set_key()
     {
         /** === Test Data === */
         $KEY = 'key';
         /** === Mocks === */
         /** === Test itself === */
         $obj = new DataObject();
-        $obj->setData($KEY, 10);
-        $this->assertEquals(10, $obj->getData($KEY));
-        $obj->setData($KEY, 'string');
-        $this->assertEquals('string', $obj->getData($KEY));
-        $obj->setData($KEY, ['array']);
-        $this->assertEquals(['array'], $obj->getData($KEY));
+        $obj->_set($KEY, 10);
+        $this->assertEquals(10, $obj->_get($KEY));
+        $obj->_set($KEY, 'string');
+        $this->assertEquals('string', $obj->_get($KEY));
+        $obj->_set($KEY, ['array']);
+        $this->assertEquals(['array'], $obj->_get($KEY));
         /* use DataObject as data */
-        $obj->setData($KEY, new DataObject('value'));
-        $this->assertInstanceOf(DataObject::class, $obj->getData($KEY));
-        $this->assertEquals('value', $obj->getData($KEY)->getData());
+        $obj->_set($KEY, new DataObject('value'));
+        $this->assertInstanceOf(DataObject::class, $obj->_get($KEY));
+        $this->assertEquals('value', $obj->_get($KEY)->_get());
     }
 
-    public function test_setData_path()
+    public function test__set_path()
     {
         /** === Test Data === */
         $VAL_INT = 10;
@@ -56,53 +60,54 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         /** === Mocks === */
         /** === Test itself === */
         $obj = new DataObject();
-        $obj->setData('/', $VAL_INT);
-        $this->assertEquals($VAL_INT, $obj->getData('/'));
-        $obj->setData('/key', $VAL_STR1);
-        $this->assertEquals($VAL_STR1, $obj->getData('/key'));
-        $obj->setData('/deep/path/to/node', $VAL_STR2);
-        $this->assertEquals($VAL_STR2, $obj->getData('/deep/path/to/node'));
-        $obj->setData('deep/path/to/node', $VAL_STR1);
-        $this->assertEquals($VAL_STR1, $obj->getData('deep/path/to/node'));
-        $obj->setData('path/to/node', $VAL_INT);
-        $this->assertEquals($VAL_INT, $obj->getData('path/to/node'));
-        $this->assertEquals($VAL_STR1, $obj->getData('/key'));
-        $this->assertEquals(null, $obj->getData('/path/is/not/exist'));
+        $obj->_set('/', $VAL_INT);
+        $this->assertEquals($VAL_INT, $obj->_get('/'));
+        $obj->_set('/key', $VAL_STR1);
+        $this->assertEquals($VAL_STR1, $obj->_get('/key'));
+        $obj->_set('/deep/path/to/node', $VAL_STR2);
+        $this->assertEquals($VAL_STR2, $obj->_get('/deep/path/to/node'));
+        $obj->_set('deep/path/to/node', $VAL_STR1);
+        $this->assertEquals($VAL_STR1, $obj->_get('deep/path/to/node'));
+        $obj->_set('path/to/node', $VAL_INT);
+        $this->assertEquals($VAL_INT, $obj->_get('path/to/node'));
+        $this->assertEquals($VAL_STR1, $obj->_get('/key'));
+        $this->assertEquals(null, $obj->_get('/path/is/not/exist'));
     }
 
-    public function test_setData_path_nested()
+    public function test__set_path_nested()
     {
         $obj = new DataObject();
         /* use DataObject as data */
-        $obj->setData('path/to/node', new DataObject('attr', 'value'));
-        $this->assertEquals('value', $obj->getData('path/to/node/attr'));
-        $this->assertInstanceOf(DataObject::class, $obj->getData('path/to/node'));
+        $obj->_set('path/to/node', new DataObject('attr', 'value'));
+        $res = $obj->_get('path/to/node/attr');
+        $this->assertEquals('value', $res);
+        $this->assertInstanceOf(DataObject::class, $obj->_get('path/to/node'));
     }
 
-    public function test_setData_wo_keys()
+    public function test__set_wo_keys()
     {
         /** === Test Data === */
         /** === Mocks === */
         /** === Test itself === */
         $obj = new DataObject();
-        $this->assertEquals(null, $obj->getData());
-        $obj->setData(10);
-        $this->assertEquals(10, $obj->getData());
-        $obj->setData('string');
-        $this->assertEquals('string', $obj->getData());
-        $obj->setData(['array']);
-        $this->assertEquals(['array'], $obj->getData());
-        $obj->setData(new DataObject('key', 'value'));
-        $this->assertEquals('value', $obj->getData('key'));
+        $this->assertEquals(null, $obj->_get());
+        $obj->_set(10);
+        $this->assertEquals(10, $obj->_get());
+        $obj->_set('string');
+        $this->assertEquals('string', $obj->_get());
+        $obj->_set(['array']);
+        $this->assertEquals(['array'], $obj->_get());
+        $obj->_set(new DataObject('key', 'value'));
+        $this->assertEquals('value', $obj->_get('key'));
     }
 
     public function test_unsetData()
     {
         /* unset root */
         $obj = new DataObject('data');
-        $this->assertEquals('data', $obj->getData());
-        $obj->unsetData();
-        $this->assertNull($obj->getData());
+        $this->assertEquals('data', $obj->_get());
+        $obj->_unset();
+        $this->assertNull($obj->_get());
         /* unset key in root array */
         $obj->setKey('dataKey');
         $obj->setOther('dataOther');
@@ -111,10 +116,10 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertNull($obj->getKey());
         $this->assertEquals('dataOther', $obj->getOther());
         /* unset by path */
-        $obj->setData('Other/Node', 'dataNode');
-        $this->assertEquals('dataNode', $obj->getData('/Other/Node'));
-        $obj->unsetData('/Other/Node');
+        $obj->_set('Other/Node', 'dataNode');
+        $this->assertEquals('dataNode', $obj->_get('/Other/Node'));
+        $obj->_unset('/Other/Node');
         /* wrong path */
-        $obj->unsetData('/Other/WrongNode');
+        $obj->_unset('/Other/WrongNode');
     }
 }
