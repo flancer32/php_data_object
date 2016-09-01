@@ -23,8 +23,12 @@ class DataObject
     const _METHOD_UNSET = 'unset';
     /**#@-*/
 
-    /** @var null|array Container for data */
-    private $_data = null;
+    /**
+     * Use 'protected' visibility to view container data in debug mode (IDE PhpStorm, for example).
+     *
+     * @var null|array Container for data
+     */
+    protected $_data = null;
 
     /**
      * Method '_set(...)' is called when any argument is not null.
@@ -224,6 +228,29 @@ class DataObject
             }
         }
         $current = $data;
+    }
+
+    /**
+     * Magic method to implement read operations for the properties.
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get($name)
+    {
+        $result = $this->_get($name);
+        return $result;
+    }
+
+    /**
+     * Magic method to implement write operations for the properties.
+     *
+     * @param $name
+     * @param $value
+     */
+    public function __set($name, $value)
+    {
+        $this->_set($name, $value);
     }
 
     /**

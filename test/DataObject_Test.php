@@ -4,7 +4,8 @@
  */
 namespace Flancer32\Lib;
 
-class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
+class DataObject_UnitTest
+    extends \PHPUnit_Framework_TestCase
 {
     /**
      * @expectedException \Exception
@@ -30,6 +31,26 @@ class DataObject_UnitTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($VALUE, $obj->_get());
         $obj = new DataObject($KEY, $VALUE);
         $this->assertEquals($VALUE, $obj->_get($KEY));
+    }
+
+    public function test_construct_fromArray()
+    {
+        /** === Test Data === */
+        $DATA = [
+            'order' => [
+                'id' => 21,
+                'items' => [
+                    ['id' => 32],
+                    ['id' => 56]
+                ]
+            ]
+        ];
+        /** === Test itself === */
+        $obj = new DataObject($DATA);
+        $this->assertEquals(21, $obj->_get('/order/id'));
+        $this->assertEquals(21, $obj->_get('order/id'));
+        $this->assertEquals(32, $obj->_get('order/items/0/id'));
+        $this->assertEquals(56, $obj->_get('order/items/1/id'));
     }
 
     public function test__set_key()
