@@ -18,5 +18,10 @@
     "psr-4": {
       "Flancer32\\Lib\\": "src/"
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Flancer32\\Lib\\": "test/"
+    }
   }
 }

@@ -2,31 +2,47 @@
 
 [![codecov.io](https://codecov.io/github/flancer32/php_data_object/coverage.svg?branch=master)](https://codecov.io/github/flancer32/php_data_object?branch=master)
 
+_"Smart data structures and dumb code works a lot better than the other way around."_ (c) Eric S. Raymond
+
+_"Bad programmers worry about the code. Good programmers worry about data structures and their relationships."_ (c) Linus Torvalds
+
 ## Overview
 
-This is yet another PHP implementation of the [DTO](https://en.wikipedia.org/wiki/Data_transfer_object). Some kind of the wrapper around associative array. The main goal of this implementation is to be an accessor for raw data.
+This is yet another PHP implementation of the data container (like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) or [SDO](http://php.net/manual/en/book.sdo.php)). Some kind of the wrapper around associative array. The main goal of this implementation is to be an accessor for the raw data.
 
 ## Usage
 
 
 ### Properties annotation
 
-This is default behaviour for PHP objects:
+By default any property can be set to any PHP object.
+
+    class PhpObject {}
+    
+    $obj1 = new PhpObject();
+    $obj2 = new PhpObject();
+    $obj1->name = 'first';
+    $obj2->code = 'OBJ2';
+    $obj1->sub = $obj2;
+    $this->assertEquals('first', $obj1->name);
+    $this->assertEquals('OBJ2', $obj1->sub->code);
+
+But you know nothing about data structure in this case. Annotated properties are used in the following sample and you know about data structure a little more:
 
     /**
-     * Object with simple properties.
-     *
-     * @property int $id Object's ID.
-     * @property string $name Object's name.
+     * @property string $name
+     * @property string $code
+     * @property Annotated $sub
      */
-    class DtoSimple extends \Flancer32\Lib\DataObject
-    {
-    }
+    class AnnotatedPhpObject {}
 
-    $obj = new DtoSimple();
-    $obj->id = 32;
-    $obj->name = 'simple object';
-    echo $obj->id . ': ' . $obj->name; // 32: simple object
+    $obj1 = new AnnotatedPhpObject();
+    $obj2 = new AnnotatedPhpObject();
+    $obj2->code = 'OBJ2';
+    $obj1->sub = $obj2;
+    $this->assertEquals('OBJ2', $obj1->sub->code);
+
+You don't need any containers in this case, PHP object itself is the container.
 
 ### Accessors annotation
     

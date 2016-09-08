@@ -4,7 +4,7 @@
  */
 namespace Flancer32\Lib;
 
-class DataObject_Get_UnitTest
+class DataObject_Props_Simple_Test
     extends \PHPUnit_Framework_TestCase
 {
 
@@ -14,21 +14,11 @@ class DataObject_Get_UnitTest
         $ID = 32;
         $NAME = 'simple object';
         /** === Test itself === */
-        $obj = new DtoSimple();
+        $obj = new Sample\Props\Simple();
         $obj->id = $ID;
         $obj->name = $NAME;
         $this->assertEquals($ID, $obj->id);
         $this->assertEquals($NAME, $obj->name);
     }
 
-}
-
-/**
- * Object with simple properties to test.
- *
- * @property int $id Object's ID.
- * @property string $name Object's name.
- */
-class DtoSimple extends \Flancer32\Lib\DataObject
-{
 }
