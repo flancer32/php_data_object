@@ -17,7 +17,7 @@ This is yet another PHP implementation of the data container (like [DTO](https:/
 
 By default any property can be set to any PHP object.
 
-    class PhpObject {}
+    class PhpObject {}  // class w/o properties
     
     $obj1 = new PhpObject();
     $obj2 = new PhpObject();
@@ -32,17 +32,32 @@ But you know nothing about data structure in this case. Annotated properties are
     /**
      * @property string $name
      * @property string $code
-     * @property Annotated $sub
+     * @property PhpObject $sub
      */
-    class AnnotatedPhpObject {}
+    class PhpObject {}
 
-    $obj1 = new AnnotatedPhpObject();
-    $obj2 = new AnnotatedPhpObject();
+    $obj1 = new PhpObject();
+    $obj2 = new PhpObject();
     $obj2->code = 'OBJ2';
     $obj1->sub = $obj2;
     $this->assertEquals('OBJ2', $obj1->sub->code);
 
 You don't need any containers in this case, PHP object itself is the container.
+
+
+### Paths
+
+You can get value of the inner property in PHP style:
+
+    $code = $obj1->sub->code;
+    
+but you will have "_Undefined property_" error if `$obj1->sub` property does not exist. WIth paths you will have property value if chain of properties exists or `null` otherwise:
+
+    $code = $obj1->get('sub/code');
+    $code = $obj1->get('/sub/code');    // equals to 'sub/code'
+    $code = $obj1->get('/subs/0/code'); // 'subs' is array
+
+
 
 ### Accessors annotation
     

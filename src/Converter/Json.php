@@ -23,7 +23,7 @@ class Json
      */
     public function to(\Flancer32\Lib\DataObject $do)
     {
-        $data = $do->_get();
+        $data = $do->get();
         $result = json_encode($data);
         return $result;
     }

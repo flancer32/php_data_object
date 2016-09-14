@@ -26,27 +26,24 @@ class DataObject
     /**
      * Use 'protected' visibility to view container data in debug mode (IDE PhpStorm, for example).
      *
-     * @var null|array Container for data
+     * @var array Container for data
      */
-    protected $_data = null;
+    protected $_data = [];
 
     /**
-     * Method '_set(...)' is called when any argument is not null.
+     * Put $data into $this->_data container.
      *
-     * @param mixed $arg1
-     * @param mixed $arg2
+     * @param mixed $data
      */
-    public function __construct($arg1 = null, $arg2 = null)
+    public function __construct($data = null)
     {
-        if (!is_null($arg1)) {
-            if (is_null($arg2)) {
-                $value = $arg1;
-                $this->_set($value);
-            } else {
-                $key = $arg1;
-                $value = $arg2;
-                $this->_set($key, $value);
-            }
+        if (is_array($data)) {
+            $this->_data = $data;
+        } elseif (is_object($data)) {
+            $keys = get_object_vars($data);
+            $this->_data = $keys;
+        } elseif (!is_null($data)) {
+            $this->_data = [$data];
         }
     }
 
@@ -68,13 +65,13 @@ class DataObject
         $num = func_num_args();
         if ($num == 1) {
             /* transfer associative array data only if first arg is DataObject */
-            $this->_data = ($arg1 instanceof DataObject) ? $arg1->_get() : $arg1;
+            $this->_data = ($arg1 instanceof DataObject) ? $arg1->get() : $arg1;
         } elseif ($num == 2) {
             /* there are 2 args - key & value */
             $key = trim($arg1);
             if (strpos($key, static::PS) === false) {
                 /* set data value by key */
-                $this->_data[$key] = $arg2;
+                $this->_data[ $key ] = $arg2;
             } else {
                 /* set data value by path */
                 $this->_setByPath($key, $arg2);
@@ -88,27 +85,28 @@ class DataObject
      * ($this->_data) will be returned if $path is null.
      *
      * @param string $path
-     * @param bool $underscored
      *
      * @return mixed
      */
-    public function _get($path = null, $underscored = false)
+    public function get($path = null)
     {
         if (!is_null($path) && is_array($this->_data)) {
             /* we need to find item by $path in $data array to return */
             if (strpos($path, static::PS) === false) {
                 /* there is no path separator in the $path, use $path itself to get $data item */
                 $key = trim($path);
-                $result = isset($this->_data[$key]) ? $this->_data[$key] : null;
+                $result = isset($this->_data[ $key ]) ? $this->_data[ $key ] : null;
             } else {
                 /* we need to go down to $data array structure */
                 $result = $this->_getByPath($path);
             }
         } else {
+            if (is_object($this->_data)) {
+                $class = get_class($this->_data);
+                $props = key($this->_data);
+                $attrs = get_object_vars($this->_data);
+            }
             $result = $this->_data;
-        }
-        if ($underscored) {
-            $result = $this->_convertToUnderScored($result);
         }
         return $result;
     }
@@ -116,7 +114,7 @@ class DataObject
     /**
      * @param $path
      *
-     * @return array|null
+     * @return mixed
      */
     private function _getByPath($path)
     {
@@ -130,49 +128,32 @@ class DataObject
             if ($key == '') {
                 continue;
             }
-            if (isset($result[$key])) {
-                if (
-                    ($result[$key] instanceof DataObject)
-                    && ($level < $depth)
-                ) {
-                    /* convert nested DataObjects to array if current path element is not the last */
-                    $do = $result[$key];
-                    $result = $do->_get();
+            if (is_array($result) && ($level <= $depth)) {
+                /* array, this is not end of path  */
+                if (isset($result[ $key ])) {
+                    /* ... and we can go deeper */
+                    $result = $result[ $key ];
                 } else {
-                    $result = $result[$key];
+                    /* ... and we cannot go deeper */
+                    $result = null;
+                    break;
                 }
-            } else {
+            } elseif (is_object($result) && ($level <= $depth)) {
+                /* object, this is not end of path  */
+                if (!is_null($result->$key)) {
+                    /* ... and we can go deeper */
+                    $result = $result->$key;
+                } else {
+                    /* ... and we cannot go deeper */
+                    $result = null;
+                    break;
+                }
+            } elseif ($level < $depth) {
+                /* this is not end of path but we cannot go deeper */
                 $result = null;
-            }
-        }
-        return $result;
-    }
-
-    /**
-     * Recursively convert DataObject to associative array with 'underscored' keys (CamelCase => under_scored).
-     *
-     * TODO: all converters should be external
-     *
-     * @param $data
-     * @return array
-     */
-    protected function _convertToUnderScored($data)
-    {
-        $result = [];
-        foreach ($data as $key => $item) {
-            $underKey = $this->_fromCamelCase($key);
-            if (is_array($item)) {
-                foreach ($item as $subKey => $subItem) {
-                    if (!is_int($subKey)) {
-                        $subKey = $this->_fromCamelCase($subKey);
-                    }
-                    $subData = $this->_convertToUnderScored($subItem);
-                    $result[$underKey][$subKey] = $subData;
-                }
-            } elseif ($item instanceof DataObject) {
-                $result[$underKey] = $this->_convertToUnderScored($item->_get());
+                break;
             } else {
-                $result[$underKey] = $item;
+                /* this is end of path, not array or object, just return value */
             }
         }
         return $result;
@@ -213,17 +194,17 @@ class DataObject
             if ($key == '') {
                 continue;
             }
-            if (isset($current[$key])) {
+            if (isset($current[ $key ])) {
                 /* just go through the $data structure */
-                $current = &$current[$key];
+                $current = &$current[ $key ];
             } else {
                 if (is_array($current)) {
                     /* we need to create new node on the path */
-                    $current[$key] = [];
-                    $current = &$current[$key];
+                    $current[ $key ] = [];
+                    $current = &$current[ $key ];
                 } else {
                     $current = [$key => []];
-                    $current = &$current[$key];
+                    $current = &$current[ $key ];
                 }
             }
         }
@@ -238,7 +219,7 @@ class DataObject
      */
     public function __get($name)
     {
-        $result = $this->_get($name);
+        $result = $this->get($name);
         return $result;
     }
 
@@ -285,7 +266,7 @@ class DataObject
         $varName = lcfirst(substr($methodName, $strlen));
         switch ($methodPrefix) {
             case static::_METHOD_GET:
-                $result = $this->_get($varName);
+                $result = $this->get($varName);
                 break;
             case static::_METHOD_SET:
                 $varValue = isset($arguments[0]) ? $arguments[0] : null;
@@ -309,10 +290,10 @@ class DataObject
             $this->_data = null;
         } elseif (
             is_array($this->_data) &&
-            isset($this->_data[$path])
+            isset($this->_data[ $path ])
         ) {
             /* unset element in root container */
-            unset($this->_data[$path]);
+            unset($this->_data[ $path ]);
         } elseif (
             is_array($this->_data) &&
             (strpos($path, static::PS) !== false)
@@ -334,13 +315,13 @@ class DataObject
                 if ($key == '') {
                     continue;
                 }
-                if (isset($current[$key])) {
+                if (isset($current[ $key ])) {
                     if ($count <= 0) {
                         /* this is the end of path, unset element in array */
-                        unset($current[$key]);
+                        unset($current[ $key ]);
                     } else {
                         /* just go through the $data structure */
-                        $current = &$current[$key];
+                        $current = &$current[ $key ];
                     }
                 } else {
                     /* this is un-existing path, just interrupt loop */
