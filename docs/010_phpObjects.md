@@ -1,6 +1,6 @@
 # Native PHP objects
 
-[Home](../)
+[Home](../README.md)
 
 ## Without structure
 
@@ -126,4 +126,4 @@ Hybrid usage:
 
 You don't need any containers in this case, PHP object itself is the container.
 
-[Home](../)
+[Home](../README.md)
