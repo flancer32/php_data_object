@@ -5,11 +5,11 @@
 namespace Flancer32\Lib\Sample\PhpObject;
 
 /**
- * Object with structure (properties are annotated).
+ * Objects with structure (properties are annotated).
  *
- * @property string $name
- * @property string $code
- * @property Annotated $sub
+ * @property string $name Object name.
+ * @property string $code Object code.
+ * @property Annotated $sub Inner object of the same type.
  *
  */
 class Annotated

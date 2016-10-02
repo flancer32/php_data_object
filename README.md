@@ -10,36 +10,82 @@ _"Bad programmers worry about the code. Good programmers worry about data struct
 
 This is yet another PHP implementation of the data container (like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) or [SDO](http://php.net/manual/en/book.sdo.php)). Some kind of the wrapper around associative array. The main goal of this implementation is to be an accessor for the raw data.
 
-## Usage
+## Native PHP objects
 
 
-### Properties annotation
+### Without structure
 
 By default any property can be set to any PHP object.
 
-    class PhpObject {}  // class w/o properties
-    
-    $obj1 = new PhpObject();
-    $obj2 = new PhpObject();
+
+#### Anonymous
+
+PHP 7 anonymous classes are used in the sample:
+
+    $obj1 = new class
+    {
+    };
+    $obj2 = new class
+    {
+    };
     $obj1->name = 'first';
     $obj2->code = 'OBJ2';
     $obj1->sub = $obj2;
     $this->assertEquals('first', $obj1->name);
     $this->assertEquals('OBJ2', $obj1->sub->code);
 
-But you know nothing about data structure in this case. Annotated properties are used in the following sample and you know about data structure a little more:
 
-    /**
-     * @property string $name
-     * @property string $code
-     * @property PhpObject $sub
-     */
-    class PhpObject {}
+#### Named class
 
-    $obj1 = new PhpObject();
-    $obj2 = new PhpObject();
+Empty named class `test/Sample/PhpObject/Named.php`:
+
+    class Named
+    {
+    
+    }
+
+Usage of the empty named class:
+
+    $obj1 = new Sample\PhpObject\Named();
+    $obj2 = new Sample\PhpObject\Named();
+    $obj1->name = 'first';
     $obj2->code = 'OBJ2';
     $obj1->sub = $obj2;
+    $this->assertEquals('first', $obj1->name);
+    $this->assertEquals('OBJ2', $obj1->sub->code);
+        
+        
+### With structure
+
+You know nothing about data structure in the above cases. 
+
+
+#### Properties
+
+#### Annotations
+
+Annotated properties are used in the following sample and you know about data structure a little more:
+
+    /**
+     * Objects with structure (properties are annotated).
+     *
+     * @property string $name Object name.
+     * @property string $code Object code.
+     * @property Annotated $sub Inner object of the same type.
+     *
+     */
+    class Annotated
+    {
+    }
+
+Usage of the class with annotated props:
+
+    $obj1 = new Sample\PhpObject\Annotated();
+    $obj2 = new Sample\PhpObject\Annotated();
+    $obj1->name = 'first';
+    $obj2->code = 'OBJ2';
+    $obj1->sub = $obj2;
+    $this->assertEquals('first', $obj1->name);
     $this->assertEquals('OBJ2', $obj1->sub->code);
 
 You don't need any containers in this case, PHP object itself is the container.

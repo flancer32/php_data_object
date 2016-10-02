@@ -5,9 +5,9 @@
 namespace Flancer32\Lib\Sample\PhpObject;
 
 /**
- * Empty PHP object without structure (or with any structure).
+ * Named class for empty PHP objects without structure (or with any structure).
  */
-class EmptyObj
+class Named
 {
 
 }
