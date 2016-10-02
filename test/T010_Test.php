@@ -9,10 +9,10 @@ use Flancer32\Lib\Sample\PhpObject\Named;
 /**
  * Test for PHP native objects (anonymous, named, ...).
  */
-class T01_Test
+class T010_Test
     extends \PHPUnit_Framework_TestCase
 {
-    public function test_01_anonymous()
+    public function test_010_anonymous()
     {
         $obj1 = new class
         {
@@ -27,7 +27,7 @@ class T01_Test
         $this->assertEquals('OBJ2', $obj1->sub->code);
     }
 
-    public function test_02_named()
+    public function test_020_named()
     {
         $obj1 = new Sample\PhpObject\Named();
         $obj2 = new Sample\PhpObject\Named();
@@ -38,7 +38,7 @@ class T01_Test
         $this->assertEquals('OBJ2', $obj1->sub->code);
     }
 
-    public function test_03_structured()
+    public function test_030_structured()
     {
         $obj1 = new Sample\PhpObject\Structured();
         $obj2 = new Sample\PhpObject\Structured();
@@ -49,10 +49,21 @@ class T01_Test
         $this->assertEquals('OBJ2', $obj1->sub->code);
     }
 
-    public function test_04_annotated()
+    public function test_040_annotated()
     {
         $obj1 = new Sample\PhpObject\Annotated();
         $obj2 = new Sample\PhpObject\Annotated();
+        $obj1->name = 'first';
+        $obj2->code = 'OBJ2';
+        $obj1->sub = $obj2;
+        $this->assertEquals('first', $obj1->name);
+        $this->assertEquals('OBJ2', $obj1->sub->code);
+    }
+
+    public function test_050_hybrid()
+    {
+        $obj1 = new Sample\PhpObject\Hybrid();
+        $obj2 = new Sample\PhpObject\Hybrid();
         $obj1->name = 'first';
         $obj2->code = 'OBJ2';
         $obj1->sub = $obj2;
