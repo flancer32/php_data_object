@@ -1,5 +1,6 @@
 # Native PHP objects
 
+[Home](../)
 
 ## Without structure
 
@@ -42,7 +43,7 @@ You know nothing about data structure in the above cases.
 
 
 ### Properties
-`test/Sample/PhpObject/Structured.php`:
+Classic definition of the proprs (`test/Sample/PhpObject/Structured.php`):
 
     class Structured
     {
@@ -91,8 +92,6 @@ Usage of the class with annotated props:
     $this->assertEquals('first', $obj1->name);
     $this->assertEquals('OBJ2', $obj1->sub->code);
 
-You don't need any containers in this case, PHP object itself is the container.
-
 
 ## Hybrid
 
@@ -121,3 +120,10 @@ Hybrid usage:
     $obj1->sub = $obj2;
     $this->assertEquals('first', $obj1->name);
     $this->assertEquals('OBJ2', $obj1->sub->code);
+ 
+    
+## Resume
+
+You don't need any containers in this case, PHP object itself is the container.
+
+[Home](../)
