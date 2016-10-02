@@ -12,83 +12,17 @@ This is yet another PHP implementation of the data container (like [DTO](https:/
 
 ## Native PHP objects
 
+We can use any property of any PHP object:
 
-### Without structure
-
-By default any property can be set to any PHP object.
-
-
-#### Anonymous
-
-PHP 7 anonymous classes are used in the sample:
-
-    $obj1 = new class
-    {
-    };
-    $obj2 = new class
-    {
-    };
+    $obj1 = new class {};
+    $obj2 = new class {};
     $obj1->name = 'first';
     $obj2->code = 'OBJ2';
     $obj1->sub = $obj2;
     $this->assertEquals('first', $obj1->name);
     $this->assertEquals('OBJ2', $obj1->sub->code);
 
-
-#### Named class
-
-Empty named class `test/Sample/PhpObject/Named.php`:
-
-    class Named
-    {
-    
-    }
-
-Usage of the empty named class:
-
-    $obj1 = new Sample\PhpObject\Named();
-    $obj2 = new Sample\PhpObject\Named();
-    $obj1->name = 'first';
-    $obj2->code = 'OBJ2';
-    $obj1->sub = $obj2;
-    $this->assertEquals('first', $obj1->name);
-    $this->assertEquals('OBJ2', $obj1->sub->code);
-        
-        
-### With structure
-
-You know nothing about data structure in the above cases. 
-
-
-#### Properties
-
-#### Annotations
-
-Annotated properties are used in the following sample and you know about data structure a little more:
-
-    /**
-     * Objects with structure (properties are annotated).
-     *
-     * @property string $name Object name.
-     * @property string $code Object code.
-     * @property Annotated $sub Inner object of the same type.
-     *
-     */
-    class Annotated
-    {
-    }
-
-Usage of the class with annotated props:
-
-    $obj1 = new Sample\PhpObject\Annotated();
-    $obj2 = new Sample\PhpObject\Annotated();
-    $obj1->name = 'first';
-    $obj2->code = 'OBJ2';
-    $obj1->sub = $obj2;
-    $this->assertEquals('first', $obj1->name);
-    $this->assertEquals('OBJ2', $obj1->sub->code);
-
-You don't need any containers in this case, PHP object itself is the container.
+[More...](./docs/010_phpObjects.md)
 
 
 ### Paths

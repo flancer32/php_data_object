@@ -10,17 +10,17 @@ namespace Flancer32\Lib\Sample\PhpObject;
 class Structured
 {
     /**
-     * Object name.
-     *
-     * @var  string
-     */
-    public $name;
-    /**
      * Object code.
      *
      * @var  string
      */
     public $code;
+    /**
+     * Object name.
+     *
+     * @var  string
+     */
+    public $name;
     /**
      * Inner object of the same type.
      *
