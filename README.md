@@ -29,15 +29,19 @@ We can use any property of any PHP object:
 
 You can get value of the inner property in PHP style:
 
-    $code = $obj1->sub->code;
+    $code = $obj->sub->code;
     
 but you will have "_Undefined property_" error if `$obj1->sub` property does not exist. WIth paths you will have property value if chain of properties exists or `null` otherwise:
 
-    $code = $obj1->get('sub/code');
-    $code = $obj1->get('/sub/code');    // equals to 'sub/code'
-    $code = $obj1->get('/subs/0/code'); // 'subs' is array
+    $code = $obj->get('sub/code');
+    $code = $obj->get('/sub/code');    // equals to 'sub/code'
+    $code = $obj->get('/subs/0/code'); // 'subs' is array
+    $code = $obj->get('/sub/code/does/not/exist'); // 'null' is returned, no error is occured
 
+Also you can set data property by path:
 
+    $obj->set('order/customer/name', 'John Dow');
+    
 
 ### Accessors annotation
     
