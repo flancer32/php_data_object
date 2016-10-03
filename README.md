@@ -6,12 +6,18 @@ _"Smart data structures and dumb code works a lot better than the other way arou
 
 _"Bad programmers worry about the code. Good programmers worry about data structures and their relationships."_ (c) Linus Torvalds
 
+
+
 ## Overview
 
 This is yet another PHP implementation of the data container (like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) or [SDO](http://php.net/manual/en/book.sdo.php)). Some kind of the wrapper around associative array. The main goal of this implementation is to be an accessor for the raw data.
 
+
+
 ## Native PHP objects
 
+
+### Structure
 We can use any property of any PHP object:
 
     $obj1 = new class {};
@@ -27,11 +33,27 @@ We can use any property of any PHP object:
 
 ### Paths
 
-You can get value of the inner property in PHP style:
+You can set/get value of the inner property in PHP style:
 
+    $obj->sub->code = $code;
     $code = $obj->sub->code;
     
-but you will have "_Undefined property_" error if `$obj1->sub` property does not exist. WIth paths you will have property value if chain of properties exists or `null` otherwise:
+but you will have "_Undefined property_" error if `$obj->sub` property does not exist. 
+
+
+### Type hinting
+
+
+
+## Data Objects
+
+
+### Structure
+
+
+### Paths
+
+With paths you will have property value if chain of properties exists or `null` otherwise:
 
     $code = $obj->get('sub/code');
     $code = $obj->get('/sub/code');    // equals to 'sub/code'
@@ -43,42 +65,9 @@ Also you can set data property by path:
     $obj->set('order/customer/name', 'John Dow');
     
 
-### Accessors annotation
+### Type hinting
     
-### Access array data by path
-
-    $DATA = [
-        'order' => [
-            'id' => 21,
-            'items' => [
-                ['id' => 32],
-                ['id' => 56]
-            ]
-        ]
-    ];
-    $orderId = $obj->_get('order/id'); // 21
-    $firstItemId = $obj->_get('order/items/0/id'); // 32
-    $secondItemId = $obj->_get('order/items/1/id'); // 56
-
-
-
-Get JSON decoded data by path:
-
-    $json = '{"order":{"id":21,"items":[{"id":32},{"id":56}]}}';
-    $data = json_decode($json, true);
-    $obj = new DataObject($data);
-    /* get data by path */
-    $orderId = $obj->_get('order/id'); // 21
-    $itemId = $obj->_get('order/items/1/id'); // 56
-    /* get first level data by key */
-    $order = $obj->getOrder();
-    /* get arrays by path */
-    foreach ($obj->_get('/order/items') as $item) {
-        $id = $item['id']; // 32, 56
-        /* convert array to data object */
-        $itemObj = new DataObject($item);
-        $id = $itemObj->getId(); // 32, 56
-    }
+    
 
 ## Installation
 
@@ -89,7 +78,8 @@ Add to your `composer.json`:
     }
 
 
+
 ## Development
 
     $ composer install
-    $ ./vendor/bin/phpunit -c ./test/phpunit.dist.xml
+    $ ./vendor/bin/phpunit -c ./test/unit/phpunit.dist.xml
