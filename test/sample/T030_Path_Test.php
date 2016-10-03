@@ -10,7 +10,7 @@ namespace Flancer32\Lib;
  * @SuppressWarnings(PHPMD.CamelCaseClassName)
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
-class T030_Test
+class T030_Path_Test
     extends \PHPUnit_Framework_TestCase
 {
     /**

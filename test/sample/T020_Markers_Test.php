@@ -7,7 +7,7 @@ namespace Flancer32\Lib;
 /**
  * Test for DataObject markers (implements or extends).
  */
-class T020_Test
+class T020_Markers_Test
     extends \PHPUnit_Framework_TestCase
 {
     /**

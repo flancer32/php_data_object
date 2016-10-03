@@ -9,7 +9,7 @@ use Flancer32\Lib\Sample\PhpObject\Named;
 /**
  * Test for PHP native objects (anonymous, named, ...).
  */
-class T010_Test
+class T010_PhpNative_Test
     extends \PHPUnit_Framework_TestCase
 {
     public function test_010_anonymous()
