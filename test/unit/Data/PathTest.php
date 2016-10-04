@@ -101,8 +101,8 @@ class PathTest
     public function test_set_010_oneStep_property()
     {
         $data = new Blank();
-        $res = $this->obj->set($data, '/name/', 'John Dow');
-        $this->assertEquals('John Dow', $res->name);
+        $this->obj->set($data, '/name/', 'John Dow');
+        $this->assertEquals('John Dow', $data->name);
     }
 
     public function test_set_020_oneStep_array()
