@@ -11,17 +11,14 @@ namespace Flancer32\Lib\Sample\TypeChecking;
  */
 class Customer
 {
-    /** @var  string */
-    public $name;
-
     public function getAge() : int
     {
-        return $this->name;
+        return $this->age;
     }
 
     public function getEmail() : string
     {
-        return $this->name;
+        return $this->email;
     }
 
     public function getName() : string
@@ -31,12 +28,12 @@ class Customer
 
     public function setAge(int $data)
     {
-        $this->name = $data;
+        $this->age = $data;
     }
 
     public function setEmail(string $data)
     {
-        $this->name = $data;
+        $this->email = $data;
     }
 
     public function setName(string $data)

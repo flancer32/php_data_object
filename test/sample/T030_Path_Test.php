@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib;
+namespace Flancer32\Lib\Test;
 
 /**
  * Path to node.

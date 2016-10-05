@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib;
+namespace Flancer32\Lib\Test;
 
 /**
  * Check types of the properties.
@@ -22,16 +22,7 @@ class T040_TypeChecking_Test
         $this->assertTrue(is_int($customer->name));
     }
 
-    public function test_02_setterWithCasting()
-    {
-        $customer = new \Flancer32\Lib\Sample\TypeChecking\Customer();
-        $customer->setName('John Dow');
-        $this->assertTrue(is_string($customer->name));
-        $customer->setName(21); // type casting "int => string"
-        $this->assertFalse(is_int($customer->name));
-    }
-
-    public function test_03_setterWithRightType()
+    public function test_02_setterWithRightType()
     {
         $customer = new \Flancer32\Lib\Sample\TypeChecking\Customer();
         $customer->setName('John Dow');
@@ -43,7 +34,7 @@ class T040_TypeChecking_Test
     /**
      * @expectedException \TypeError
      */
-    public function test_04_setterWithWrongType()
+    public function test_03_setterWithWrongType()
     {
         $customer = new class
         {

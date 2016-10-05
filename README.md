@@ -9,7 +9,6 @@ _"Bad programmers worry about the code. Good programmers worry about data struct
 
 
 ## Overview
-
 This is yet another PHP implementation of the data container (like [DTO](https://en.wikipedia.org/wiki/Data_transfer_object) / [SDO](http://php.net/manual/en/book.sdo.php)). Some kind of the wrapper around associative array. The main goal of this implementation is to be an accessor for the raw data.
 
 
@@ -18,7 +17,6 @@ This is yet another PHP implementation of the data container (like [DTO](https:/
 
 
 ### Structure
-
 We can use any property of any PHP object:
 
     $obj1 = new class {};
@@ -33,7 +31,6 @@ We can use any property of any PHP object:
 
 
 ### Paths
-
 We can set/get value of the inner property in PHP style:
 
     $obj->sub->code = $code;
@@ -43,8 +40,62 @@ but we will have "_Undefined property_" error if `$obj->sub` property does not e
 
 
 ### Type checking
+We need to use accessors to control properties types.
 
-We cannot use type checking for properties just now (PHP 7.0.11), this feature is not [implemented yet](https://wiki.php.net/rfc/property_type_hints). We need to use accessors to control properties types:
+This is `Customer` class with `string` property:
+
+    /**
+     * @property string $name Customer name.
+     */
+    class Customer
+    {
+        public function getName() : string
+        {
+            return $this->name;
+        }
+    
+        public function setName(string $data)
+        {
+            $this->name = $data;
+        }
+    }
+
+This is `Order` class with `Customer` property: 
+
+    /**
+     * @property Customer $customer
+     */
+    class Order
+    {
+        public function getCustomer() : Customer
+        {
+            return $this->customer;
+        }
+    
+        public function setCustomer(Customer $data)
+        {
+            $this->customer = $data;
+        }
+    }
+    
+This is code without errors (all types are expected): 
+    
+    $customer = new Customer();
+    $customer->setName('John Dow');
+    $order = new Order();
+    $order->setCustomer($customer);
+    $this->assertTrue(is_string($order->getCustomer()->getName()));
+    
+This code will throw a `\TypeError` exception:
+    
+    $customer = new class {};
+    $customer->name = 'John Dow';
+    $order = new Order();
+    $order->setCustomer($customer);
+    
+
+[More...](./docs/020_TypeChecking.md)
+
 
 ## Data Objects
 
@@ -53,7 +104,6 @@ We cannot use type checking for properties just now (PHP 7.0.11), this feature i
 
 
 ### Paths
-
 With paths we will have property value if chain of properties exists or `null` otherwise:
 
     $code = $obj->get('sub/code');
@@ -71,7 +121,6 @@ Also we can set data property by path:
     
 
 ## Installation
-
 Add to `composer.json`:
 
     "require": {
