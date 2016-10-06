@@ -1,5 +1,7 @@
 # php_data_object
 
+[![Build Status](https://travis-ci.org/flancer32/php_data_object.svg)](https://travis-ci.org/e/)
+
 [![codecov.io](https://codecov.io/github/flancer32/php_data_object/coverage.svg?branch=master)](https://codecov.io/github/flancer32/php_data_object?branch=master)
 
 _"Smart data structures and dumb code works a lot better than the other way around."_ (c) Eric S. Raymond
