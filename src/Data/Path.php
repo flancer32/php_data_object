@@ -95,9 +95,7 @@ class Path
                 }
             } else {
                 /* current property does not exist, create new object and move buffer one step down */
-                $buffer->$part = new class
-                {
-                };
+                $buffer->$part = new \stdClass();
                 if ($level == $depth) {
                     /* assign $value to the new property */
                     $buffer->$part = $value;
