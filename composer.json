@@ -21,7 +21,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Flancer32\\Lib\\Sample\\": "test/sample",
+      "Flancer32\\Lib\\Test\\Sample\\": "test/sample",
       "Flancer32\\Lib\\": "test/unit"
     }
   }

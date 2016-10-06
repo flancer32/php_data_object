@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib\Sample\PhpObject;
+namespace Flancer32\Lib\Test\Sample\PhpObject;
 
 /**
  * Object with structure (properties are defined directly).

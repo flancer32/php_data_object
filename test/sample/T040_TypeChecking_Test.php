@@ -15,7 +15,7 @@ class T040_TypeChecking_Test
 {
     public function test_01_propsWithWrongType()
     {
-        $customer = new \Flancer32\Lib\Sample\TypeChecking\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\TypeChecking\Customer();
         $customer->name = 'John Dow';
         $this->assertTrue(is_string($customer->name));
         $customer->name = 21;
@@ -24,9 +24,9 @@ class T040_TypeChecking_Test
 
     public function test_02_setterWithRightType()
     {
-        $customer = new \Flancer32\Lib\Sample\TypeChecking\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\TypeChecking\Customer();
         $customer->setName('John Dow');
-        $order = new \Flancer32\Lib\Sample\TypeChecking\Order();
+        $order = new \Flancer32\Lib\Test\Sample\TypeChecking\Order();
         $order->setCustomer($customer);
         $this->assertTrue(is_string($order->getCustomer()->getName()));
     }
@@ -40,7 +40,7 @@ class T040_TypeChecking_Test
         {
         };
         $customer->name = 'John Dow';
-        $order = new \Flancer32\Lib\Sample\TypeChecking\Order();
+        $order = new \Flancer32\Lib\Test\Sample\TypeChecking\Order();
         $order->setCustomer($customer);
     }
 

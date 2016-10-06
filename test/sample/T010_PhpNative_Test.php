@@ -4,7 +4,7 @@
  */
 namespace Flancer32\Lib\Test;
 
-use Flancer32\Lib\Sample\PhpObject\Named;
+use Flancer32\Lib\Test\Sample\PhpObject\Named;
 
 /**
  * Test for PHP native objects (anonymous, named, ...).

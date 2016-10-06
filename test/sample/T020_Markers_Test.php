@@ -15,17 +15,17 @@ class T020_Markers_Test
      */
     public function test_01_implements()
     {
-        $customer = new \Flancer32\Lib\Sample\Marker\Impl\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\Marker\Impl\Customer();
         $customer->name = 'John Dow';
         $customer->email = 'jdow@gmail.com';
         $customer->age = 27;
-        $product01 = new \Flancer32\Lib\Sample\Marker\Impl\Product();
+        $product01 = new \Flancer32\Lib\Test\Sample\Marker\Impl\Product();
         $product01->name = 'Pen';
         $product01->price = 1.00;
-        $product02 = new \Flancer32\Lib\Sample\Marker\Impl\Product();
+        $product02 = new \Flancer32\Lib\Test\Sample\Marker\Impl\Product();
         $product02->name = 'Apple';
         $product02->price = 2.00;
-        $order = new \Flancer32\Lib\Sample\Marker\Impl\Order();
+        $order = new \Flancer32\Lib\Test\Sample\Marker\Impl\Order();
         $order->customer = $customer;
         $order->products[] = $product01;
         $order->products[] = $product02;
@@ -43,17 +43,17 @@ class T020_Markers_Test
      */
     public function test_01_extends()
     {
-        $customer = new \Flancer32\Lib\Sample\Marker\Ext\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\Marker\Ext\Customer();
         $customer->name = 'John Dow';
         $customer->email = 'jdow@gmail.com';
         $customer->age = 27;
-        $product01 = new \Flancer32\Lib\Sample\Marker\Ext\Product();
+        $product01 = new \Flancer32\Lib\Test\Sample\Marker\Ext\Product();
         $product01->name = 'Pen';
         $product01->price = 1.00;
-        $product02 = new \Flancer32\Lib\Sample\Marker\Ext\Product();
+        $product02 = new \Flancer32\Lib\Test\Sample\Marker\Ext\Product();
         $product02->name = 'Apple';
         $product02->price = 2.00;
-        $order = new \Flancer32\Lib\Sample\Marker\Ext\Order();
+        $order = new \Flancer32\Lib\Test\Sample\Marker\Ext\Order();
         $order->customer = $customer;
         $order->products[] = $product01;
         $order->products[] = $product02;

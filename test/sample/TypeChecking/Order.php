@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib\Sample\TypeChecking;
+namespace Flancer32\Lib\Test\Sample\TypeChecking;
 
 /**
  * @property Customer $customer

@@ -18,9 +18,9 @@ class T030_Path_Test
      */
     public function test_01_simple()
     {
-        $customer = new \Flancer32\Lib\Sample\Marker\Impl\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\Marker\Impl\Customer();
         $customer->name = 'John Dow';
-        $order = new \Flancer32\Lib\Sample\Marker\Impl\Order();
+        $order = new \Flancer32\Lib\Test\Sample\Marker\Impl\Order();
         $order->customer = $customer;
 
     }

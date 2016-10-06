@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib\Sample\Marker\Impl;
+namespace Flancer32\Lib\Test\Sample\Marker\Impl;
 
 /**
  * @property string $name Customer name.

@@ -2,7 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
-namespace Flancer32\Lib\Sample\Marker\Ext;
+namespace Flancer32\Lib\Test\Sample\Marker\Ext;
 
 /**
  * @property string $name Product name.

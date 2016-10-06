@@ -19,7 +19,7 @@ class T044_TypeChecking_Strict_Test
      */
     public function test_01_setterWithWrongType()
     {
-        $customer = new \Flancer32\Lib\Sample\TypeChecking\Customer();
+        $customer = new \Flancer32\Lib\Test\Sample\TypeChecking\Customer();
         $customer->setAge('21');
     }
 
