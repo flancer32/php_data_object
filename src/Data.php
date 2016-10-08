@@ -4,8 +4,6 @@
  */
 namespace Flancer32\Lib;
 
-use Flancer32\Lib\Data\TPath;
-
 require_once __DIR__ . '/Data/Path.php';
 
 /**
@@ -14,7 +12,7 @@ require_once __DIR__ . '/Data/Path.php';
 class Data
     implements IData
 {
-    use TPath;
+    use Data\TPath;
     /** Separator for path elements */
     const PS = '/';
 
@@ -24,16 +22,13 @@ class Data
     {
         $argc = func_num_args();
         if ($argc == 0) {
+            // empty DataObject is just \stdClass
             $this->_data = new \stdClass();
         } elseif ($argc == 1) {
+            // store first argument as storage content
             $this->_data = func_get_arg(0);
-        } elseif ($argc == 2) {
-            $prop = (string)func_get_arg(0);
-            $data = func_get_arg(1);
-            $this->_data = new \stdClass();
-            $this->_data->$prop = $data;
         } else {
-            throw new \Exception('Wrong number of constructor arguments (should be <=2).');
+            throw new \Exception('Wrong number of constructor arguments (should be <2).');
         }
     }
 
