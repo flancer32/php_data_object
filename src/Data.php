@@ -16,13 +16,14 @@ class Data
     /** Separator for path elements */
     const PS = '/';
 
+    /** @var mixed Container for data. */
     protected $_data;
 
     public function __construct()
     {
         $argc = func_num_args();
         if ($argc == 0) {
-            // empty DataObject is just \stdClass
+            // empty DataObject is just an \stdClass
             $this->_data = new \stdClass();
         } elseif ($argc == 1) {
             // store first argument as storage content
