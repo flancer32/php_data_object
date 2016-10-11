@@ -4,6 +4,7 @@
  */
 namespace Flancer32\Lib;
 
+require_once __DIR__ . '/Data/TData.php';
 require_once __DIR__ . '/Data/Path.php';
 
 /**
@@ -13,6 +14,11 @@ class Data
     implements IData
 {
     use Data\TPath;
+    use Data\TData {
+        _get as protected;
+        _set as protected;
+    }
+
     /** Separator for path elements */
     const PS = '/';
 
@@ -37,7 +43,40 @@ class Data
     {
         $result = null;
         if ($name == 'get') {
+            /* getter for container's inner data */
             $result = $this->_data;
+        } elseif ($name == 'set') {
+            /* setter for container's inner data */
+        } elseif ($name == 'unset') {
+            /* unset container's inner data */
+        } else {
+            $length = 3; // analyze method prefix (set/get)
+            $prefix = substr($name, 0, $length);
+            if (
+                ($prefix != 'get') &&
+                ($prefix != 'set')
+            ) {
+                $length = 5; // analyze method prefix (unset)
+                $prefix = substr($name, 0, $length);
+                if ($prefix != 'unset') {
+                    $msg = 'Invalid method ' . get_class($this) . "::$name() for data object. get/set/unset methods are only allowed.";
+                    throw new \Exception($msg);
+                }
+            }
+            /* convert '[get|set|unset]AttributeName' to 'attributeName' form */
+            $property = lcfirst(substr($name, $length));
+            switch ($prefix) {
+                case 'get':
+                    $result = $this->_get($property);
+                    break;
+                case 'set':
+                    $value = isset($arguments[0]) ? $arguments[0] : null;
+                    $this->_set($property, $value);
+                    break;
+                case static::_METHOD_UNSET:
+                    $this->unset($property);
+                    break;
+            }
         }
         return $result;
     }
