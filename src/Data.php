@@ -16,6 +16,7 @@ class Data
     use Data\TPath;
     use Data\TData {
         _get as protected;
+        _parseCall as protected;
         _set as protected;
     }
 
@@ -39,6 +40,13 @@ class Data
         }
     }
 
+    /**
+     * Magic method for all other methods (accessors, etc.).
+     *
+     * @param string $name method name
+     * @param $arguments
+     * @return mixed|null
+     */
     public function __call($name, $arguments)
     {
         $result = null;
@@ -47,55 +55,58 @@ class Data
             $result = $this->_data;
         } elseif ($name == 'set') {
             /* setter for container's inner data */
+            $this->_data = $arguments;
         } elseif ($name == 'unset') {
-            /* unset container's inner data */
+            /* unset container's inner data; empty container is stdClass */
+            $this->_data = new \stdClass();
         } else {
-            $length = 3; // analyze method prefix (set/get)
-            $prefix = substr($name, 0, $length);
-            if (
-                ($prefix != 'get') &&
-                ($prefix != 'set')
-            ) {
-                $length = 5; // analyze method prefix (unset)
-                $prefix = substr($name, 0, $length);
-                if ($prefix != 'unset') {
-                    $msg = 'Invalid method ' . get_class($this) . "::$name() for data object. get/set/unset methods are only allowed.";
-                    throw new \Exception($msg);
-                }
-            }
-            /* convert '[get|set|unset]AttributeName' to 'attributeName' form */
-            $property = lcfirst(substr($name, $length));
-            switch ($prefix) {
-                case 'get':
-                    $result = $this->_get($property);
-                    break;
-                case 'set':
-                    $value = isset($arguments[0]) ? $arguments[0] : null;
-                    $this->_set($property, $value);
-                    break;
-                case static::_METHOD_UNSET:
-                    $this->unset($property);
-                    break;
-            }
+            $result = $this->_parseCall($name, $arguments);
         }
         return $result;
     }
 
+    /**
+     * Magic method to read properties directly.
+     *
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
-        $result = $this->_data->$name;
+        $result = null;
+        if (isset($this->_data->$name)) {
+            $result = $this->_data->$name;
+        } elseif (isset($this->_data[ $name ])) {
+            $result = $this->_data[ $name ];
+        }
         return $result;
     }
 
+    /**
+     * Magic method to write properties directly.
+     *
+     * @param $name
+     * @param $value
+     */
     public function __set($name, $value)
     {
-        $this->_data->$name = $value;
+        if (is_object($this->_data)) {
+            $this->_data->$name = $value;
+        } elseif (is_array($this->_data)) {
+            $this->_data[ $name ] = $value;
+        } else {
+            throw new \Exception('Inner container is not object or array. Cannot set property ' . "'$name'.");
+        }
+
     }
 
     public function __unset($name)
     {
         if (isset($this->_data->$name)) {
             unset($this->_data->$name);
+        }
+        if (isset($this->_data[ $name ])) {
+            unset($this->_data[ $name ]);
         }
     }
 }
