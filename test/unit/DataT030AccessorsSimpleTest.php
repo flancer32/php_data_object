@@ -23,10 +23,8 @@ class DataT030AccessorsSimpleTest
 
     public function test_020_asObj()
     {
-        $value = new class
-        {
-            public $prop = 32;
-        };
+        $value = new \stdClass();
+        $value->prop = 32;
         $obj = new Data();
         $obj->setProperty($value);
         $this->assertEquals(32, $obj->getProperty()->prop);
