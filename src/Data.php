@@ -4,10 +4,9 @@
  */
 namespace Flancer32\Lib;
 
-require_once __DIR__ . '/Data/TMain.php';
-require_once __DIR__ . '/Data/TPath.php';
-
 /**
+ * @method mixed get(string $path = null) get inner container data all or by path.
+ *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Data
@@ -17,9 +16,6 @@ class Data
         _get as protected;
         _parseCall as protected;
         _set as protected;
-    }
-    use Data\TPath {
-        _pathAsArray as protected;
     }
 
     /** Separator for path elements */
@@ -54,7 +50,8 @@ class Data
         $result = null;
         if ($name == 'get') {
             /* getter for container's inner data */
-            $result = $this->_data;
+            $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
+            $result = $this->_get($propertyPath);
         } elseif ($name == 'set') {
             /* setter for container's inner data */
             $this->_data = $arguments;
@@ -78,8 +75,8 @@ class Data
         $result = null;
         if (isset($this->_data->$name)) {
             $result = $this->_data->$name;
-        } elseif (isset($this->_data[ $name ])) {
-            $result = $this->_data[ $name ];
+        } elseif (isset($this->_data[$name])) {
+            $result = $this->_data[$name];
         }
         return $result;
     }
@@ -95,7 +92,7 @@ class Data
         if (is_object($this->_data)) {
             $this->_data->$name = $value;
         } elseif (is_array($this->_data)) {
-            $this->_data[ $name ] = $value;
+            $this->_data[$name] = $value;
         } else {
             throw new \Exception('Inner container is not object or array. Cannot set property ' . "'$name'.");
         }
@@ -107,8 +104,8 @@ class Data
         if (isset($this->_data->$name)) {
             unset($this->_data->$name);
         }
-        if (isset($this->_data[ $name ])) {
-            unset($this->_data[ $name ]);
+        if (isset($this->_data[$name])) {
+            unset($this->_data[$name]);
         }
     }
 }

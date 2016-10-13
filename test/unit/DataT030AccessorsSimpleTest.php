@@ -5,6 +5,8 @@
 namespace Flancer32\Lib;
 
 /**
+ * Access properties of the data object using accessors (getters & setters).
+ *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 class DataT030AccessorsSimpleTest
@@ -17,5 +19,24 @@ class DataT030AccessorsSimpleTest
         $obj = new Data();
         $obj->setProperty($value);
         $this->assertEquals($value, $obj->getProperty());
+    }
+
+    public function test_020_asObj()
+    {
+        $value = new class
+        {
+            public $prop = 32;
+        };
+        $obj = new Data();
+        $obj->setProperty($value);
+        $this->assertEquals(32, $obj->getProperty()->prop);
+    }
+
+    public function test_030_asArr()
+    {
+        $value = ['prop' => 64];
+        $obj = new Data();
+        $obj->setProperty($value);
+        $this->assertEquals(64, $obj->getProperty()['prop']);
     }
 }

@@ -4,6 +4,8 @@
  */
 namespace Flancer32\Lib\Data;
 
+//require_once __DIR__ . '/TPath.php';
+
 /**
  * Main trait with protected/private methods of the ../Data class.
  *
@@ -11,14 +13,20 @@ namespace Flancer32\Lib\Data;
  */
 trait TMain
 {
+    use TPath {
+        _pathAsArray as protected;
+    }
 
     public function _get($property)
     {
         $result = null;
-        if (strpos($property, static::PS) === false) {
-            /* get data value by key */
+        if (!$property) {
+            /* return all data from inner container */
+            $result = $this->_data;
+        } elseif (strpos($property, static::PS) === false) {
+            /* get data value by key (property name) */
             if (is_array($this->_data)) {
-                $result = $this->_data[ $property ];
+                $result = $this->_data[$property];
             } elseif (is_object($this->_data)) {
                 $result = $this->_data->$property;
             } else {
@@ -26,7 +34,7 @@ trait TMain
             }
         } else {
             /* get data value by path */
-//            $this->_setByPath($key, $value);
+            $this->_getByPath($key, $value);
         }
         return $result;
     }
@@ -69,7 +77,7 @@ trait TMain
         if (strpos($property, static::PS) === false) {
             /* set data value by key */
             if (is_array($this->_data)) {
-                $this->_data[ $property ] = $value;
+                $this->_data[$property] = $value;
             } elseif (is_object($this->_data)) {
                 $this->_data->$property = $value;
             } elseif (is_null($this->_data)) {

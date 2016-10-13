@@ -5,6 +5,8 @@
 namespace Flancer32\Lib;
 
 /**
+ * Access properties of the data object directly.
+ *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
 class DataT020AccessPropsSimpleTest
