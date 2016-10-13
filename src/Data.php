@@ -4,8 +4,8 @@
  */
 namespace Flancer32\Lib;
 
-require_once __DIR__ . '/Data/TData.php';
-require_once __DIR__ . '/Data/Path.php';
+require_once __DIR__ . '/Data/TMain.php';
+require_once __DIR__ . '/Data/TPath.php';
 
 /**
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
@@ -13,11 +13,13 @@ require_once __DIR__ . '/Data/Path.php';
 class Data
     implements IData
 {
-    use Data\TPath;
-    use Data\TData {
+    use Data\TMain {
         _get as protected;
         _parseCall as protected;
         _set as protected;
+    }
+    use Data\TPath {
+        _pathAsArray as protected;
     }
 
     /** Separator for path elements */

@@ -4,29 +4,6 @@
  */
 namespace Flancer32\Lib\Data;
 
-trait TPath
-{
-    /**
-     * Convert string representation into array ('/path/to/node' => ['path', 'to', 'node']).
-     *
-     * @param string $path
-     * @return array
-     */
-    public function asArray($path)
-    {
-        $result = explode(\Flancer32\Lib\Data::PS, $path);
-        // unset empty nodes
-        foreach ($result as $key => $item) {
-            if (!$item && $item !== "0") {
-                unset($result[$key]);
-            }
-        }
-        // re-index array
-        $result = array_values($result);
-        return $result;
-    }
-}
-
 class Path
 {
     /** Separator for path elements */

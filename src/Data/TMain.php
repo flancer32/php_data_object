@@ -5,9 +5,11 @@
 namespace Flancer32\Lib\Data;
 
 /**
+ * Main trait with protected/private methods of the ../Data class.
+ *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
-trait TData
+trait TMain
 {
 
     public function _get($property)
