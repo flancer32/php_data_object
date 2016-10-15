@@ -26,7 +26,7 @@ trait TMain
         } elseif (strpos($property, static::PS) === false) {
             /* get data value by key (property name) */
             if (is_array($this->_data)) {
-                $result = $this->_data[$property];
+                $result = $this->_data[ $property ];
             } elseif (is_object($this->_data)) {
                 $result = $this->_data->$property;
             } else {
@@ -34,7 +34,48 @@ trait TMain
             }
         } else {
             /* get data value by path */
-            $this->_getByPath($key, $value);
+            $result = $this->_getByPath($property);
+        }
+        return $result;
+    }
+
+    public function _getByPath($path)
+    {
+        $result = null;
+        $steps = $this->_pathAsArray($path);
+        $depth = count($steps); // number of steps in the path
+        if ($depth == 0) {
+            $result = $this->_data;
+        } else {
+            $pointer = $this->_data;
+            $level = 0;
+            foreach ($steps as $step) {
+                if (is_array($pointer)) {
+                    if (isset($pointer[ $step ])) {
+                        /* go to the next step */
+                        $pointer = $pointer[ $step ];
+                    } else {
+                        /* next step is missed in the path, return null */
+                        break;
+                    }
+                } elseif (is_object($this->_data)) {
+                    if (isset($pointer->$step)) {
+                        /* go to the next step */
+                        $pointer = $pointer->$step;
+                    } else {
+                        /* next step is missed in the path, return null */
+                        break;
+                    }
+                } else {
+                    /* we have no data for the next step */
+                    break;
+                }
+                $level++; // one step on the path is done
+            }
+            if ($level >= $depth) {
+                /* we have reached the end of path */
+                $result = $pointer;
+            }
         }
         return $result;
     }
@@ -77,7 +118,7 @@ trait TMain
         if (strpos($property, static::PS) === false) {
             /* set data value by key */
             if (is_array($this->_data)) {
-                $this->_data[$property] = $value;
+                $this->_data[ $property ] = $value;
             } elseif (is_object($this->_data)) {
                 $this->_data->$property = $value;
             } elseif (is_null($this->_data)) {

@@ -14,6 +14,7 @@ class Data
 {
     use Data\TMain {
         _get as protected;
+        _getByPath as protected;
         _parseCall as protected;
         _set as protected;
     }
@@ -75,8 +76,8 @@ class Data
         $result = null;
         if (isset($this->_data->$name)) {
             $result = $this->_data->$name;
-        } elseif (isset($this->_data[$name])) {
-            $result = $this->_data[$name];
+        } elseif (isset($this->_data[ $name ])) {
+            $result = $this->_data[ $name ];
         }
         return $result;
     }
@@ -92,7 +93,7 @@ class Data
         if (is_object($this->_data)) {
             $this->_data->$name = $value;
         } elseif (is_array($this->_data)) {
-            $this->_data[$name] = $value;
+            $this->_data[ $name ] = $value;
         } else {
             throw new \Exception('Inner container is not object or array. Cannot set property ' . "'$name'.");
         }
@@ -104,8 +105,8 @@ class Data
         if (isset($this->_data->$name)) {
             unset($this->_data->$name);
         }
-        if (isset($this->_data[$name])) {
-            unset($this->_data[$name]);
+        if (isset($this->_data[ $name ])) {
+            unset($this->_data[ $name ]);
         }
     }
 }

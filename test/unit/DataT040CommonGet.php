@@ -22,15 +22,31 @@ class DataT040CommonGet
 
     public function test_020_byPath()
     {
-//        $order = new \stdClass();
-//        $customer = new \stdClass();
-//        $address = new \stdClass();
-//        $street = 'street';
-//        $address->street = $street;
-//        $customer->address = $address;
-//        $order->customer = $customer;
-//        $obj = new Data($order);
-//        $this->assertEquals($street, $obj->get('/customer/address/street'));
+        $order = new \stdClass();
+        $customer = [];
+        $address = new \stdClass();
+        $street = 'street';
+        $address->street = $street;
+        $customer['address'] = $address;
+        $order->customer = $customer;
+        $obj = new Data($order);
+        $this->assertEquals($street, $obj->get('/customer/address/street'));
+    }
+
+    /**
+     * Return inner container if path is '/'.
+     */
+    public function test_020_byPath_empty()
+    {
+        $order = new \stdClass();
+        $customer = new \stdClass();
+        $address = new \stdClass();
+        $street = 'street';
+        $address->street = $street;
+        $customer->address = $address;
+        $order->customer = $customer;
+        $obj = new Data($order);
+        $this->assertEquals($order, $obj->get('/'));
 
     }
 }
