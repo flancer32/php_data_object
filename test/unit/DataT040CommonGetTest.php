@@ -9,7 +9,7 @@ namespace Flancer32\Lib;
  *
  * @SuppressWarnings(PHPMD.CamelCaseMethodName)
  */
-class DataT040CommonGet
+class DataT040CommonGetTest
     extends \PHPUnit_Framework_TestCase
 {
 
