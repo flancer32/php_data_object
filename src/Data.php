@@ -14,6 +14,7 @@ class Data
 {
     use Data\TMain {
         _get as protected;
+        _getByPath as protected;
         _parseCall as protected;
         _set as protected;
     }
@@ -75,7 +76,7 @@ class Data
         $result = null;
         if (isset($this->_data->$name)) {
             $result = $this->_data->$name;
-        } elseif (isset($this->_data[$name])) {
+        } elseif (is_array($this->_data) && isset($this->_data[$name])) {
             $result = $this->_data[$name];
         }
         return $result;
