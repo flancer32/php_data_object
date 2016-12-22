@@ -55,7 +55,9 @@ class Data
             $result = $this->_get($propertyPath);
         } elseif ($name == 'set') {
             /* setter for container's inner data */
-            $this->_data = $arguments;
+            $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
+            $value = isset($arguments[1]) ? $arguments[1] : null;
+            $result = $this->_set($propertyPath, $value);
         } elseif ($name == 'unset') {
             /* unset container's inner data; empty container is stdClass */
             $this->_data = new \stdClass();

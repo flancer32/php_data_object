@@ -28,7 +28,7 @@ trait TMain
             if (is_array($this->_data)) {
                 $result = $this->_data[ $property ];
             } elseif (is_object($this->_data)) {
-                $result = $this->_data->$property;
+                $result = isset($this->_data->$property) ? $this->_data->$property : null;
             } else {
                 $result = $this->_data;
             }
