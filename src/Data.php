@@ -52,6 +52,7 @@ class Data
         if ($name == 'get') {
             /* getter for container's inner data */
             $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
+            /* return $_data if get() w/o path or return data by path */
             $result = $this->_get($propertyPath);
         } elseif ($name == 'set') {
             /* setter for container's inner data */
