@@ -113,23 +113,27 @@ trait TMain
         return $result;
     }
 
-    public function _set($property, $value)
+    public function _set($arg0, $value)
     {
-        if (strpos($property, static::PS) === false) {
-            /* set data value by key */
-            if (is_array($this->_data)) {
-                $this->_data[ $property ] = $value;
-            } elseif (is_object($this->_data)) {
-                $this->_data->$property = $value;
-            } elseif (is_null($this->_data)) {
-                $this->_data = new \stdClass();
-                $this->_data->$property = $value;
+        if (is_string($arg0)) {
+            if (strpos($arg0, static::PS) === false) {
+                /* set data value by key */
+                if (is_array($this->_data)) {
+                    $this->_data[ $arg0 ] = $value;
+                } elseif (is_object($this->_data)) {
+                    $this->_data->$arg0 = $value;
+                } elseif (is_null($this->_data)) {
+                    $this->_data = new \stdClass();
+                    $this->_data->$arg0 = $value;
+                } else {
+                    throw new \Exception("Inner data is scalar. Cannot set property '$arg0'.'");
+                }
             } else {
-                throw new \Exception("Inner data is scalar. Cannot set property '$property'.'");
+                /* set data value by path */
+//            $this->_setByPath($key, $value);
             }
         } else {
-            /* set data value by path */
-//            $this->_setByPath($key, $value);
+            $this->_data = $arg0;
         }
     }
 }
