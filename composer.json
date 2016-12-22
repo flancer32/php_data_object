@@ -11,12 +11,18 @@
     }
   ],
   "require-dev": {
-    "phpunit/phpunit": "~4|~5",
+    "phpunit/phpunit": "~5",
     "phpmd/phpmd": "@stable"
   },
   "autoload": {
     "psr-4": {
       "Flancer32\\Lib\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Flancer32\\Lib\\Test\\Sample\\": "test/sample",
+      "Flancer32\\Lib\\": "test/unit"
     }
   }
 }

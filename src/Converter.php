@@ -47,7 +47,7 @@ class Converter
     private function _convertToXml($data, \SimpleXMLElement &$xml, $path = '')
     {
         if ($data instanceof DataObject) {
-            $data = $data->getData();
+            $data = $data->get();
         }
         foreach ($data as $key => $value) {
             if (is_int($key)) {
