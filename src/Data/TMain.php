@@ -4,8 +4,6 @@
  */
 namespace Flancer32\Lib\Data;
 
-//require_once __DIR__ . '/TPath.php';
-
 /**
  * Main trait with protected/private methods of the ../Data class.
  *
@@ -26,7 +24,7 @@ trait TMain
         } elseif (strpos($property, static::PS) === false) {
             /* get data value by key (property name) */
             if (is_array($this->_data)) {
-                $result = $this->_data[ $property ];
+                $result = isset($this->_data[$property]) ? $this->_data[$property] : null;
             } elseif (is_object($this->_data)) {
                 $result = isset($this->_data->$property) ? $this->_data->$property : null;
             } else {
@@ -132,8 +130,12 @@ trait TMain
                 /* set data value by path */
 //            $this->_setByPath($key, $value);
             }
-        } else {
+        } elseif (is_array($arg0)) {
             $this->_data = $arg0;
+        } elseif ($arg0 instanceof \Flancer32\Lib\Data) {
+            $this->_data = $arg0->get();
+        } else {
+            throw new \Exception("Some fucking shit is happened with data setting.'");
         }
     }
 }
