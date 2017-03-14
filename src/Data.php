@@ -5,7 +5,8 @@
 namespace Flancer32\Lib;
 
 /**
- * @method mixed get(string $path = null) get inner container data all or by path.
+ * @method mixed get(mixed $path = null) get inner container data (all or by path).
+ * @method null set(mixed $path = null, mixed $value = null) set inner container data (all or by path).
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
@@ -17,6 +18,7 @@ class Data
         _getByPath as protected;
         _parseCall as protected;
         _set as protected;
+        _unset as protected;
     }
 
     /** Separator for path elements */
@@ -49,19 +51,18 @@ class Data
     public function __call($name, $arguments)
     {
         $result = null;
+        $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
         if ($name == 'get') {
             /* getter for container's inner data */
-            $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
             /* return $_data if get() w/o path or return data by path */
             $result = $this->_get($propertyPath);
         } elseif ($name == 'set') {
             /* setter for container's inner data */
-            $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
             $value = isset($arguments[1]) ? $arguments[1] : null;
             $result = $this->_set($propertyPath, $value);
         } elseif ($name == 'unset') {
             /* unset container's inner data; empty container is stdClass */
-            $this->_data = new \stdClass();
+            $this->_unset($propertyPath);
         } else {
             $result = $this->_parseCall($name, $arguments);
         }

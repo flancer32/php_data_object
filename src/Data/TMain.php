@@ -117,7 +117,7 @@ trait TMain
             if (strpos($arg0, static::PS) === false) {
                 /* set data value by key */
                 if (is_array($this->_data)) {
-                    $this->_data[ $arg0 ] = $value;
+                    $this->_data[$arg0] = $value;
                 } elseif (is_object($this->_data)) {
                     $this->_data->$arg0 = $value;
                 } elseif (is_null($this->_data)) {
@@ -136,6 +136,25 @@ trait TMain
             $this->_data = $arg0->get();
         } else {
             throw new \Exception("Some fucking shit is happened with data setting.'");
+        }
+    }
+
+    public function _unset($arg0)
+    {
+        if (is_string($arg0)) {
+            if (strpos($arg0, static::PS) === false) {
+                /* unset data value by key */
+                if (is_array($this->_data)) {
+                    unset($this->_data[$arg0]);
+                } elseif (is_object($this->_data)) {
+                    unset($this->_data->$arg0);
+                }
+            } else {
+                /* set data value by path */
+//            $this->_setByPath($key, $value);
+            }
+        } else {
+            throw new \Exception("Some fucking shit is happened with data un-setting.'");
         }
     }
 }
