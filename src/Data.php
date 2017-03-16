@@ -6,7 +6,7 @@ namespace Flancer32\Lib;
 
 /**
  * @method mixed get(mixed $path = null) get inner container data (all or by path).
- * @method null set(mixed $path = null, mixed $value = null) set inner container data (all or by path).
+ * @method null set(mixed $pathOrValue = null, mixed $value = null) set inner container data (all or by path).
  *
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
@@ -91,6 +91,7 @@ class Data
      *
      * @param $name
      * @param $value
+     * @throws \Exception
      */
     public function __set($name, $value)
     {
