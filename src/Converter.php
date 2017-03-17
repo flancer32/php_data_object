@@ -43,6 +43,8 @@ class Converter
      *
      * @param DataObject|array $data
      * @param \SimpleXMLElement $xml
+     * @param $path
+     * @throws \Exception
      */
     private function _convertToXml($data, \SimpleXMLElement &$xml, $path = '')
     {
