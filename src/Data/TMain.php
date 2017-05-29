@@ -4,6 +4,8 @@
  */
 namespace Flancer32\Lib\Data;
 
+use Flancer32\Lib\Config as Cfg;
+
 /**
  * Main trait with protected/private methods of the ../Data class.
  *
@@ -37,6 +39,12 @@ trait TMain
         return $result;
     }
 
+    /**
+     * Recursive method to get some attribute of the DataObject by path.
+     *
+     * @param $path
+     * @return array|\Flancer32\Lib\IData|mixed|null
+     */
     public function _getByPath($path)
     {
         $result = null;
@@ -56,7 +64,15 @@ trait TMain
                         /* next step is missed in the path, return null */
                         break;
                     }
-                } elseif (is_object($this->_data)) {
+                } elseif ($pointer instanceof \Flancer32\Lib\IData) {
+                    if (!is_null($pointer->get($step))) {
+                        /* go to the next step */
+                        $pointer = $pointer->get($step);
+                    } else {
+                        /* next step is missed in the path, return null */
+                        break;
+                    }
+                } elseif (is_object($pointer)) {
                     if (isset($pointer->$step)) {
                         /* go to the next step */
                         $pointer = $pointer->$step;
@@ -84,12 +100,12 @@ trait TMain
         $length = 3; // analyze method prefix (set/get)
         $prefix = substr($name, 0, $length);
         if (
-            ($prefix != 'get') &&
-            ($prefix != 'set')
+            ($prefix != Cfg::METHOD_GET) &&
+            ($prefix != Cfg::METHOD_SET)
         ) {
             $length = 5; // analyze method prefix (unset)
             $prefix = substr($name, 0, $length);
-            if ($prefix != 'unset') {
+            if ($prefix != Cfg::METHOD_UNSET) {
                 $msg = 'Invalid method ' . get_class($this) . "::$name() for data object. get/set/unset methods are only allowed.";
                 throw new \Exception($msg);
             }
@@ -97,14 +113,14 @@ trait TMain
         /* convert '[get|set|unset]AttributeName' to 'attributeName' form */
         $property = lcfirst(substr($name, $length));
         switch ($prefix) {
-            case 'get':
+            case Cfg::METHOD_GET:
                 $result = $this->_get($property);
                 break;
-            case 'set':
+            case Cfg::METHOD_SET:
                 $value = isset($arguments[0]) ? $arguments[0] : null;
                 $this->_set($property, $value);
                 break;
-            case static::_METHOD_UNSET:
+            case Cfg::METHOD_UNSET:
                 $this->unset($property);
                 break;
         }

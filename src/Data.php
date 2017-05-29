@@ -4,6 +4,8 @@
  */
 namespace Flancer32\Lib;
 
+use Flancer32\Lib\Config as Cfg;
+
 /**
  * @method mixed get(mixed $path = null) get inner container data (all or by path).
  * @method null set(mixed $pathOrValue = null, mixed $value = null) set inner container data (all or by path).
@@ -52,15 +54,15 @@ class Data
     {
         $result = null;
         $propertyPath = isset($arguments[0]) ? $arguments[0] : null;
-        if ($name == 'get') {
+        if ($name == Cfg::METHOD_GET) {
             /* getter for container's inner data */
             /* return $_data if get() w/o path or return data by path */
             $result = $this->_get($propertyPath);
-        } elseif ($name == 'set') {
+        } elseif ($name == Cfg::METHOD_SET) {
             /* setter for container's inner data */
             $value = isset($arguments[1]) ? $arguments[1] : null;
             $result = $this->_set($propertyPath, $value);
-        } elseif ($name == 'unset') {
+        } elseif ($name == Cfg::METHOD_UNSET) {
             /* unset container's inner data; empty container is stdClass */
             $this->_unset($propertyPath);
         } else {
