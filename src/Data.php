@@ -36,8 +36,13 @@ class Data
             // empty DataObject is just an \stdClass
             $this->_data = new \stdClass();
         } elseif ($argc == 1) {
-            // store first argument as storage content
-            $this->_data = func_get_arg(0);
+            // store first argument as storage content if it is not 'null'.
+            $first = func_get_arg(0);
+            if (is_null($first)) {
+                $this->_data = new \stdClass();
+            } else {
+                $this->_data = func_get_arg(0);
+            }
         } else {
             throw new \Exception('Wrong number of constructor arguments (should be <2).');
         }

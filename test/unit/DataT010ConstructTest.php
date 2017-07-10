@@ -19,6 +19,12 @@ class DataT010ConstructTest
         $this->assertEquals(new \stdClass(), $obj->get());
     }
 
+    public function test_014_asNull()
+    {
+        $obj = new Data(null);
+        $this->assertEquals(new \stdClass(), $obj->get());
+    }
+
     public function test_020_asScalar_int()
     {
         $value = 32;
