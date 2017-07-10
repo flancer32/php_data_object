@@ -22,15 +22,15 @@ trait TMain
         $result = null;
         if (!$property) {
             /* return all data from inner container */
-            $result = $this->_data;
+            $result = $this->data;
         } elseif (strpos($property, static::PS) === false) {
             /* get data value by key (property name) */
-            if (is_array($this->_data)) {
-                $result = isset($this->_data[$property]) ? $this->_data[$property] : null;
-            } elseif (is_object($this->_data)) {
-                $result = isset($this->_data->$property) ? $this->_data->$property : null;
+            if (is_array($this->data)) {
+                $result = isset($this->data[$property]) ? $this->data[$property] : null;
+            } elseif (is_object($this->data)) {
+                $result = isset($this->data->$property) ? $this->data->$property : null;
             } else {
-                $result = $this->_data;
+                $result = $this->data;
             }
         } else {
             /* get data value by path */
@@ -51,9 +51,9 @@ trait TMain
         $steps = $this->_pathAsArray($path);
         $depth = count($steps); // number of steps in the path
         if ($depth == 0) {
-            $result = $this->_data;
+            $result = $this->data;
         } else {
-            $pointer = $this->_data;
+            $pointer = $this->data;
             $level = 0;
             foreach ($steps as $step) {
                 if (is_array($pointer)) {
@@ -132,13 +132,13 @@ trait TMain
         if (is_string($arg0)) {
             if (strpos($arg0, static::PS) === false) {
                 /* set data value by key */
-                if (is_array($this->_data)) {
-                    $this->_data[$arg0] = $value;
-                } elseif (is_object($this->_data)) {
-                    $this->_data->$arg0 = $value;
-                } elseif (is_null($this->_data)) {
-                    $this->_data = new \stdClass();
-                    $this->_data->$arg0 = $value;
+                if (is_array($this->data)) {
+                    $this->data[$arg0] = $value;
+                } elseif (is_object($this->data)) {
+                    $this->data->$arg0 = $value;
+                } elseif (is_null($this->data)) {
+                    $this->data = new \stdClass();
+                    $this->data->$arg0 = $value;
                 } else {
                     throw new \Exception("Inner data is scalar. Cannot set property '$arg0'.'");
                 }
@@ -147,9 +147,9 @@ trait TMain
 //            $this->_setByPath($key, $value);
             }
         } elseif (is_array($arg0)) {
-            $this->_data = $arg0;
+            $this->data = $arg0;
         } elseif ($arg0 instanceof \Flancer32\Lib\Data) {
-            $this->_data = $arg0->get();
+            $this->data = $arg0->get();
         } else {
             throw new \Exception("Some fucking shit is happened with data setting.'");
         }
@@ -160,10 +160,10 @@ trait TMain
         if (is_string($arg0)) {
             if (strpos($arg0, static::PS) === false) {
                 /* unset data value by key */
-                if (is_array($this->_data)) {
-                    unset($this->_data[$arg0]);
-                } elseif (is_object($this->_data)) {
-                    unset($this->_data->$arg0);
+                if (is_array($this->data)) {
+                    unset($this->data[$arg0]);
+                } elseif (is_object($this->data)) {
+                    unset($this->data->$arg0);
                 }
             } else {
                 /* set data value by path */

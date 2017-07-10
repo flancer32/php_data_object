@@ -27,21 +27,21 @@ class Data
     const PS = '/';
 
     /** @var mixed Container for data. */
-    protected $_data;
+    protected $data;
 
     public function __construct()
     {
         $argc = func_num_args();
         if ($argc == 0) {
             // empty DataObject is just an \stdClass
-            $this->_data = new \stdClass();
+            $this->data = new \stdClass();
         } elseif ($argc == 1) {
             // store first argument as storage content if it is not 'null'.
             $first = func_get_arg(0);
             if (is_null($first)) {
-                $this->_data = new \stdClass();
+                $this->data = new \stdClass();
             } else {
-                $this->_data = func_get_arg(0);
+                $this->data = func_get_arg(0);
             }
         } else {
             throw new \Exception('Wrong number of constructor arguments (should be <2).');
@@ -85,10 +85,10 @@ class Data
     public function __get($name)
     {
         $result = null;
-        if (isset($this->_data->$name)) {
-            $result = $this->_data->$name;
-        } elseif (is_array($this->_data) && isset($this->_data[$name])) {
-            $result = $this->_data[$name];
+        if (isset($this->data->$name)) {
+            $result = $this->data->$name;
+        } elseif (is_array($this->data) && isset($this->data[$name])) {
+            $result = $this->data[$name];
         }
         return $result;
     }
@@ -102,10 +102,10 @@ class Data
      */
     public function __set($name, $value)
     {
-        if (is_object($this->_data)) {
-            $this->_data->$name = $value;
-        } elseif (is_array($this->_data)) {
-            $this->_data[$name] = $value;
+        if (is_object($this->data)) {
+            $this->data->$name = $value;
+        } elseif (is_array($this->data)) {
+            $this->data[$name] = $value;
         } else {
             throw new \Exception('Inner container is not object or array. Cannot set property ' . "'$name'.");
         }
@@ -114,11 +114,11 @@ class Data
 
     public function __unset($name)
     {
-        if (isset($this->_data->$name)) {
-            unset($this->_data->$name);
+        if (isset($this->data->$name)) {
+            unset($this->data->$name);
         }
-        if (isset($this->_data[$name])) {
-            unset($this->_data[$name]);
+        if (isset($this->data[$name])) {
+            unset($this->data[$name]);
         }
     }
 }

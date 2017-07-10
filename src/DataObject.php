@@ -19,7 +19,7 @@ class DataObject
      */
     public function getIterator()
     {
-        return new \ArrayIterator($this->_data);
+        return new \ArrayIterator($this->data);
     }
 
 }
