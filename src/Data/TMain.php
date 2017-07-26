@@ -2,6 +2,7 @@
 /**
  * User: Alex Gusev <alex@flancer64.com>
  */
+
 namespace Flancer32\Lib\Data;
 
 use Flancer32\Lib\Config as Cfg;
@@ -26,9 +27,23 @@ trait TMain
         } elseif (strpos($property, static::PS) === false) {
             /* get data value by key (property name) */
             if (is_array($this->data)) {
-                $result = isset($this->data[$property]) ? $this->data[$property] : null;
+                /* try 'CamelCase' naming first */
+                if (isset($this->data[$property])) {
+                    $result = $this->data[$property];
+                } else {
+                    /* try to get 'snake_case' property */
+                    $snake = $this->camelCaseToSnakeCase($property);
+                    $result = isset($this->data[$snake]) ? $this->data[$snake] : null;
+                }
             } elseif (is_object($this->data)) {
-                $result = isset($this->data->$property) ? $this->data->$property : null;
+                /* try 'CamelCase' naming first */
+                if (isset($this->data->$property)) {
+                    $result = $this->data->$property;
+                } else {
+                    /* try to get 'snake_case' property */
+                    $snake = $this->camelCaseToSnakeCase($property);
+                    $result = isset($this->data->$snake) ? $this->data->$snake : null;
+                }
             } else {
                 $result = $this->data;
             }
@@ -57,9 +72,9 @@ trait TMain
             $level = 0;
             foreach ($steps as $step) {
                 if (is_array($pointer)) {
-                    if (isset($pointer[ $step ])) {
+                    if (isset($pointer[$step])) {
                         /* go to the next step */
-                        $pointer = $pointer[ $step ];
+                        $pointer = $pointer[$step];
                     } else {
                         /* next step is missed in the path, return null */
                         break;
@@ -172,5 +187,16 @@ trait TMain
         } else {
             throw new \Exception("Some fucking shit is happened with data un-setting.'");
         }
+    }
+
+    /**
+     * Convert 'CamelCase' names to 'snake_case'
+     *
+     * @param string $name
+     * @return string
+     */
+    public function camelCaseToSnakeCase($name)
+    {
+        return strtolower(preg_replace('/(.)([A-Z])/', "$1_$2", $name));
     }
 }
