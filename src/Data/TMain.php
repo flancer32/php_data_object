@@ -147,12 +147,26 @@ trait TMain
         if (is_string($arg0)) {
             if (strpos($arg0, static::PS) === false) {
                 /* set data value by key */
+                $snakeName = $this->camelCaseToSnakeCase($arg0);
                 if (is_array($this->data)) {
-                    $this->data[$arg0] = $value;
+                    /* try to set 'snake_name' if exists */
+                    if (isset($this->data[$snakeName])) {
+                        $this->data[$snakeName] = $value;
+                    } else {
+                        /* set 'CamelCase' name by default */
+                        $this->data[$arg0] = $value;
+                    }
                 } elseif (is_object($this->data)) {
-                    $this->data->$arg0 = $value;
+                    /* try to set 'snake_name' if exists */
+                    if (isset($this->data->$snakeName)) {
+                        $this->data->$snakeName = $value;
+                    } else {
+                        /* set 'CamelCase' name by default */
+                        $this->data->$arg0 = $value;
+                    }
                 } elseif (is_null($this->data)) {
                     $this->data = new \stdClass();
+                    /* set 'CamelCase' name by default */
                     $this->data->$arg0 = $value;
                 } else {
                     throw new \Exception("Inner data is scalar. Cannot set property '$arg0'.'");
