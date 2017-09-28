@@ -1,6 +1,6 @@
 {
   "name": "flancer32/php_data_object",
-  "description": "Universal Data Container (based on Varien_Object).",
+  "description": "Simplified Data Container (inspired by Varien_Object).",
   "type": "library",
   "license": "MIT",
   "homepage": "https://github.com/flancer32/php_data_object",
