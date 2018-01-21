@@ -58,7 +58,7 @@ trait TMain
      * Recursive method to get some attribute of the DataObject by path.
      *
      * @param $path
-     * @return array|\Flancer32\Lib\IData|mixed|null
+     * @return array|\Flancer32\Lib\Data|mixed|null
      */
     public function _getByPath($path)
     {
@@ -79,7 +79,7 @@ trait TMain
                         /* next step is missed in the path, return null */
                         break;
                     }
-                } elseif ($pointer instanceof \Flancer32\Lib\IData) {
+                } elseif ($pointer instanceof \Flancer32\Lib\Data) {
                     if (!is_null($pointer->get($step))) {
                         /* go to the next step */
                         $pointer = $pointer->get($step);

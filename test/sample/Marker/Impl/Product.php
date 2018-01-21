@@ -9,7 +9,7 @@ namespace Flancer32\Lib\Test\Sample\Marker\Impl;
  * @property double $price Product price.
  */
 class Product
-    implements \Flancer32\Lib\IData
+    extends \Flancer32\Lib\Data
 {
 
 }

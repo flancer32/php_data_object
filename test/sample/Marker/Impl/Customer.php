@@ -10,7 +10,7 @@ namespace Flancer32\Lib\Test\Sample\Marker\Impl;
  * @property int $age Age of the customer.
  */
 class Customer
-    implements \Flancer32\Lib\IData
+    extends \Flancer32\Lib\Data
 {
 
 }

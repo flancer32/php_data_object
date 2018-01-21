@@ -7,7 +7,7 @@ namespace Flancer32\Lib;
 use Flancer32\Lib\Converter\INamingStrategy;
 
 /**
- * Converter to get XML/JSON from for DataObject.
+ * Converter to get XML/JSON from data object.
  */
 class Converter
 {
@@ -27,9 +27,9 @@ class Converter
     }
 
     /**
-     * @param array|DataObject $data
+     * @param array|\Flancer32\Lib\Data $data
      * @param string $rootNode XML root node name, default - 'data'
-     * @return SimpleXMLElement
+     * @return \SimpleXMLElement
      */
     public function toXml($data, $rootNode = 'data')
     {
@@ -41,14 +41,14 @@ class Converter
     /**
      * Populate $xml with entries from $data array|DataObject.
      *
-     * @param DataObject|array $data
+     * @param \Flancer32\Lib\Data|array $data
      * @param \SimpleXMLElement $xml
      * @param $path
      * @throws \Exception
      */
     private function _convertToXml($data, \SimpleXMLElement &$xml, $path = '')
     {
-        if ($data instanceof DataObject) {
+        if ($data instanceof \Flancer32\Lib\Data) {
             $data = $data->get();
         }
         foreach ($data as $key => $value) {
@@ -59,7 +59,7 @@ class Converter
                 $arrayNode = $xml->addChild($name);
                 if (is_array($value)) {
                     $this->_convertToXml($value, $arrayNode, $newPath);
-                } elseif ($value instanceof \Flancer32\Lib\DataObject) {
+                } elseif ($value instanceof \Flancer32\Lib\Data) {
                     $this->_convertToXml($value, $arrayNode, $newPath);
                 } else {
                     throw new \Exception('Data in array nodes should not be simple, array or DataObject is expected.');
@@ -71,7 +71,7 @@ class Converter
                 if (is_array($value)) {
                     $subnode = $xml->addChild($name);
                     $this->_convertToXml($value, $subnode, $newPath);
-                } elseif ($value instanceof \Flancer32\Lib\DataObject) {
+                } elseif ($value instanceof \Flancer32\Lib\Data) {
                     $subnode = $xml->addChild($name);
                     $this->_convertToXml($value, $subnode, $newPath);
                 } else {

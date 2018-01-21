@@ -13,14 +13,13 @@ use Flancer32\Lib\Config as Cfg;
  * @SuppressWarnings(PHPMD.CamelCasePropertyName)
  */
 class Data
-    implements IData
 {
     use Data\TMain {
-        _get as protected;
-        _getByPath as protected;
-        _parseCall as protected;
-        _set as protected;
-        _unset as protected;
+        _get as private;
+        _getByPath as private;
+        _parseCall as private;
+        _set as private;
+        _unset as private;
     }
 
     /** Separator for path elements */
@@ -54,6 +53,7 @@ class Data
      * @param string $name method name
      * @param $arguments
      * @return mixed|null
+     * @throws \Exception
      */
     public function __call($name, $arguments)
     {
@@ -66,7 +66,7 @@ class Data
         } elseif ($name == Cfg::METHOD_SET) {
             /* setter for container's inner data */
             $value = isset($arguments[1]) ? $arguments[1] : null;
-            $result = $this->_set($propertyPath, $value);
+            $this->_set($propertyPath, $value);
         } elseif ($name == Cfg::METHOD_UNSET) {
             /* unset container's inner data; empty container is stdClass */
             $this->_unset($propertyPath);

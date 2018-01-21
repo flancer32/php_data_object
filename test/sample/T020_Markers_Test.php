@@ -35,10 +35,10 @@ class T020_Markers_Test
         $this->assertEquals('John Dow', $order->customer->name);
         $this->assertEquals('Pen', $order->products[0]->name);
         $this->assertEquals('Apple', $order->products[1]->name);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $customer);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $product01);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $product02);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $order);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $customer);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product01);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product02);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $order);
     }
 
     /**
@@ -65,10 +65,10 @@ class T020_Markers_Test
         $this->assertEquals('John Dow', $order->customer->name);
         $this->assertEquals('Pen', $order->products[0]->name);
         $this->assertEquals('Apple', $order->products[1]->name);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $customer);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $product01);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $product02);
-        $this->assertInstanceOf(\Flancer32\Lib\IData::class, $order);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $customer);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product01);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product02);
+        $this->assertInstanceOf(\Flancer32\Lib\Data::class, $order);
         $this->assertInstanceOf(\Flancer32\Lib\Data::class, $customer);
         $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product01);
         $this->assertInstanceOf(\Flancer32\Lib\Data::class, $product02);

@@ -8,20 +8,20 @@ class Json
 {
     /**
      * @param string $jsonString
-     * @return \Flancer32\Lib\DataObject
+     * @return \Flancer32\Lib\Data
      */
     public function from($jsonString)
     {
         $data = json_decode($jsonString, true);
-        $result = new \Flancer32\Lib\DataObject($data);
+        $result = new \Flancer32\Lib\Data($data);
         return $result;
     }
 
     /**
-     * @param \Flancer32\Lib\DataObject $do
+     * @param \Flancer32\Lib\Data $do
      * @return string
      */
-    public function to(\Flancer32\Lib\DataObject $do)
+    public function to(\Flancer32\Lib\Data $do)
     {
         $data = $do->get();
         $result = json_encode($data);

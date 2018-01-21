@@ -9,7 +9,7 @@ namespace Flancer32\Lib\Test\Sample\Marker\Impl;
  * @property Product[] $products Products in the order.
  */
 class Order
-    implements \Flancer32\Lib\IData
+    extends \Flancer32\Lib\Data
 {
 
 }
